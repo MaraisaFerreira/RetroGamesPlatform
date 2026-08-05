@@ -1,0 +1,18 @@
+INSERT INTO games (name, release_year, game_type) VALUES
+      ('Super Mario Bros.', 1985, 'PLATFORM'),
+      ('Sonic the Hedgehog', 1991, 'PLATFORM'),
+      ('Super Mario World', 1990, 'PLATFORM'),
+      ('The Legend of Zelda', 1986, 'ADVENTURE'),
+      ('The Lion King', 1994, 'PLATFORM'),
+      ('Aladdin', 1993, 'PLATFORM'),
+      ('Super Street Fighter II', 1993, 'FIGHTING'),
+      ('Super Mario Kart', 1992, 'RACE'),
+      ('Sonic the Hedgehog 2', 1992, 'PLATFORM'),
+      ('Donkey Kong Country', 1994, 'PLATFORM'),
+      ('Mickey Mania: The Timeless Adventures of Mickey Mouse', 1994, 'PLATFORM'),
+      ('Super Mario 64', 1996, 'PLATFORM'),
+      ('Ronaldinho Soccer 97', 1997, 'ARCADE'),
+      ('Mortal Kombat II', 1994, 'FIGHTING'),
+      ('Asterix', 1993, 'ACTION'),
+      ('Spirou', 1996, 'ACTION'),
+      ('Super Buster Bros.', 1992, 'SHOOTER');
