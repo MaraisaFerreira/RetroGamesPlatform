@@ -1,6 +1,6 @@
 CREATE TABLE consoles (
       id BIGINT PRIMARY KEY AUTO_INCREMENT,
       name VARCHAR(255) NOT NULL UNIQUE,
-      acronym VARCHAR(50) UNIQUE,
-      origin VARCHAR(100)
+      acronym VARCHAR(20) UNIQUE,
+      origin VARCHAR(100) NOT NULL
 );
