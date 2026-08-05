@@ -1,3 +1,9 @@
 spring:
   application:
     name: RetroGamePlatform
+  config:
+    import: "optional:file:./db_credentials.yaml"
+  jackson:
+    default-property-inclusion: NON_EMPTY
+  profiles:
+    active: dev

@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/db_retro_dev?useTimezone=true&serverTimezone=UTC
+    username: "${DB_DEV_USERNAME:${db_test.username}}"
+    password: "${DB_DEV_PASSWORD:${db_test.password}}"
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
