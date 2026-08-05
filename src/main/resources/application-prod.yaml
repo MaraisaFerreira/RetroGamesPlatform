@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/retro_games?useTimezone=true&serverTimezone=UTC
+    username: "${DB_RETRO_GAMES_USERNAME:${db_prod.username}}"
+    password: "${DB_RETRO_GAMES_PASSWORD:${db_prod.password}}"
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+
+logging:
+  level:
+    root: warn
