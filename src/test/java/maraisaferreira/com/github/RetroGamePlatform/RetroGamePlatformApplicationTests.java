@@ -1,4 +1,4 @@
-package com.example.RetroGamePlatform;
+package maraisaferreira.com.github.RetroGamePlatform;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
