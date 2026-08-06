@@ -40,4 +40,11 @@ public class Game {
             inverseJoinColumns = @JoinColumn(name = "console_id")
     )
     private final Set<Console> consoles = new HashSet<>();
+
+
+    public void clearRelation(Console console) {
+        this.consoles.remove(console);
+        console.getGames().remove(this);
+
+    }
 }
