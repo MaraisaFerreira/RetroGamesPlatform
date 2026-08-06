@@ -24,6 +24,11 @@ public class ConsoleController {
         return ResponseEntity.ok(consoleService.findConsoleById(id));
     }
 
+    @GetMapping("/acronym/{acronym}")
+    public ResponseEntity<ConsoleResponseDto> findConsoleByAcronym(@PathVariable String acronym){
+        return ResponseEntity.ok(consoleService.findConsoleByAcronym(acronym));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteConsole(@PathVariable Long id){
         consoleService.deleteConsole(id);

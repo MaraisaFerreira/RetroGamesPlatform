@@ -29,8 +29,16 @@ public class ConsoleService {
         return new ConsoleResponseDto(console);
     }
 
+    @Transactional(readOnly = true)
+    public ConsoleResponseDto findConsoleByAcronym(String acronym) {
+        Console console = consoleRepository.findByAcronym(acronym)
+                .orElseThrow(() -> new RuntimeException("Console not found. Is Acronym correct?"));
+
+        return new ConsoleResponseDto(console);
+    }
+
     @Transactional
-    public void deleteConsole(Long id){
+    public void deleteConsole(Long id) {
         Console console = consoleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Console not found. Is id correct?"));
 
