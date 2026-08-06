@@ -2,6 +2,7 @@ package maraisaferreira.com.github.RetroGamePlatform.service;
 
 import lombok.RequiredArgsConstructor;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleRequestDto;
+import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.ConsoleResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
 import maraisaferreira.com.github.RetroGamePlatform.model.Game;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -59,6 +61,51 @@ public class ConsoleService {
                 Strings.isNotBlank(requestDto.acronym()) ? requestDto.acronym() : null,
                 requestDto.origin()
         ));
+
+        return new ConsoleResponseDto(console);
+    }
+
+    @Transactional
+    public ConsoleResponseDto updateConsole(Long id, ConsoleUpdateRequestDto requestDto) {
+        Console console = consoleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Console not found. Is id correct?"));
+
+        if (Strings.isNotBlank(requestDto.name())) {
+            consoleRepository.findByName(requestDto.name())
+                    .filter(saved -> !saved.getId().equals(id))
+                    .ifPresent(found -> {
+                        throw new RuntimeException("This name already is saved with another id. " +
+                                "Name must be unique.");
+                    });
+
+            console.setName(requestDto.name());
+        }
+
+        if (Strings.isNotBlank(requestDto.acronym())) {
+            consoleRepository.findByAcronym(requestDto.acronym())
+                    .filter(saved -> !saved.getId().equals(id))
+                    .ifPresent(found -> {
+                        throw new RuntimeException("This acronym already is saved with another id. " +
+                                "Acronym must be unique.");
+                    });
+
+            console.setAcronym(requestDto.acronym());
+        }
+
+        if (Strings.isNotBlank(requestDto.origin())) {
+            console.setOrigin(requestDto.origin());
+        }
+
+        return new ConsoleResponseDto(console);
+
+    }
+
+    @Transactional
+    public ConsoleResponseDto setAcronymAsNull(Long id){
+        Console console = consoleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Console not found. Is id correct?"));
+
+        console.setAcronym(null);
 
         return new ConsoleResponseDto(console);
     }
