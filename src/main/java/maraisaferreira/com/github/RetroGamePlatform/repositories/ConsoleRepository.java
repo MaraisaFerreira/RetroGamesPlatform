@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface ConsoleRepository extends JpaRepository<Console, Long> {
+    Optional<Console> findByName(String name);
     Optional<Console> findByAcronym(String acronym);
+
 }
