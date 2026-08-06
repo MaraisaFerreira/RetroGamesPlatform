@@ -3,6 +3,9 @@ package maraisaferreira.com.github.RetroGamePlatform.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -23,4 +26,7 @@ public class Console {
 
     @Column(nullable = false, length = 100)
     private String origin;
+
+    @ManyToMany(mappedBy = "consoles")
+    private final Set<Game> games = new HashSet<>();
 }
