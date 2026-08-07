@@ -23,14 +23,14 @@ public class ConsoleController {
         return ResponseEntity.ok(consoleService.findAllConsoles());
     }
 
+    @GetMapping("/part_name/{part}")
+    public ResponseEntity<List<ConsoleResponseDto>> findConsoleByPartName(@PathVariable String part) {
+        return ResponseEntity.ok(consoleService.findConsolesByPartName(part));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ConsoleResponseDto> findConsoleById(@PathVariable Long id) {
         return ResponseEntity.ok(consoleService.findConsoleById(id));
-    }
-
-    @GetMapping("/acronym/{acronym}")
-    public ResponseEntity<ConsoleResponseDto> findConsoleByAcronym(@PathVariable String acronym) {
-        return ResponseEntity.ok(consoleService.findConsoleByAcronym(acronym));
     }
 
     @PostMapping
@@ -47,8 +47,8 @@ public class ConsoleController {
     }
 
     @PatchMapping("/remove_acronym/{id}")
-    public ResponseEntity<ConsoleResponseDto> setAcronymAsNull(@PathVariable Long id){
-        return ResponseEntity.ok(consoleService.setAcronymAsNull(id));
+    public ResponseEntity<ConsoleResponseDto> setConsoleAcronymAsNull(@PathVariable Long id) {
+        return ResponseEntity.ok(consoleService.setConsoleAcronymAsNull(id));
     }
 
     @DeleteMapping("/{id}")

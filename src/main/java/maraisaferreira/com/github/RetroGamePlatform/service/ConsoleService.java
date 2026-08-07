@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
@@ -26,17 +25,15 @@ public class ConsoleService {
     }
 
     @Transactional(readOnly = true)
-    public ConsoleResponseDto findConsoleById(Long id) {
-        Console console = consoleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Console not found. Is id correct?"));
-
-        return new ConsoleResponseDto(console);
+    public List<ConsoleResponseDto> findConsolesByPartName(String part) {
+        return consoleRepository.findByPartName(part)
+                .stream().map(ConsoleResponseDto::new).toList();
     }
 
     @Transactional(readOnly = true)
-    public ConsoleResponseDto findConsoleByAcronym(String acronym) {
-        Console console = consoleRepository.findByAcronym(acronym)
-                .orElseThrow(() -> new RuntimeException("Console not found. Is Acronym correct?"));
+    public ConsoleResponseDto findConsoleById(Long id) {
+        Console console = consoleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Console not found. Is id correct?"));
 
         return new ConsoleResponseDto(console);
     }
@@ -101,7 +98,7 @@ public class ConsoleService {
     }
 
     @Transactional
-    public ConsoleResponseDto setAcronymAsNull(Long id){
+    public ConsoleResponseDto setConsoleAcronymAsNull(Long id) {
         Console console = consoleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Console not found. Is id correct?"));
 
