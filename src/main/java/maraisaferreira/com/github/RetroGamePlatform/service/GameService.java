@@ -1,10 +1,12 @@
 package maraisaferreira.com.github.RetroGamePlatform.service;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameConsolesUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameUpdateRequestDto;
-import maraisaferreira.com.github.RetroGamePlatform.dto.response.MessageGameSavedResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto;
+import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameSaveResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
 import maraisaferreira.com.github.RetroGamePlatform.model.Game;
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.GameType;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -36,7 +39,7 @@ public class GameService {
     }
 
     @Transactional
-    public MessageGameSavedResponseDto saveGame(GameRequestDto requestDto) {
+    public GameSaveResponseDto saveGame(GameRequestDto requestDto) {
         gameRepository.findByName(requestDto.name())
                 .ifPresent(found -> {
                     throw new RuntimeException("This name already exits on database. Name must be unique.");
@@ -72,9 +75,10 @@ public class GameService {
 
         game.getConsoles().addAll(consoles);
 
-        return new MessageGameSavedResponseDto(
-                idErrors.isEmpty() ? "Game created" : "Some consoles ids was wrong.",
-                idErrors.isEmpty() ? null : idErrors,
+        return new GameSaveResponseDto(
+                idErrors.isEmpty() ?
+                        "Game created" :
+                        "Some consoles ids were wrong. Ids: " + idErrors,
                 new GameResponseDto(game)
         );
     }
@@ -113,6 +117,68 @@ public class GameService {
     }
 
     @Transactional
+    public GameSaveResponseDto addGameConsoles(Long id,
+                                               @Valid GameConsolesUpdateRequestDto requestDto) {
+
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
+
+        Set<Console> consoles = new HashSet<>();
+        List<Long> errors = new ArrayList<>();
+
+        for (Long consoleID : requestDto.consolesIDs()) {
+            consoleRepository.findById(consoleID)
+                    .ifPresentOrElse(consoles::add, () -> errors.add(consoleID));
+        }
+
+        if (!consoles.isEmpty()) {
+            game.getConsoles().addAll(consoles);
+        } else {
+            throw new RuntimeException("No valid console IDs were found.");
+        }
+
+        return new GameSaveResponseDto(
+                errors.isEmpty() ?
+                        "All consoles were updated." :
+                        "The following IDs were invalid: " + errors.stream().map(String::valueOf)
+                                .collect(Collectors.joining(", ")),
+                new GameResponseDto(game)
+        );
+    }
+
+    @Transactional
+    public GameSaveResponseDto removeGameConsoles(Long id,
+                                                  @Valid GameConsolesUpdateRequestDto requestDto) {
+
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
+
+        Set<Console> consoles = new HashSet<>();
+        List<Long> errors = new ArrayList<>();
+
+        for (Long consoleID : requestDto.consolesIDs()) {
+            consoleRepository.findById(consoleID)
+                    .ifPresentOrElse(consoles::add, () -> errors.add(consoleID));
+        }
+
+        if (!consoles.isEmpty()) {
+            for (Console console : consoles) {
+                game.clearRelation(console);
+            }
+        } else {
+            throw new RuntimeException("No valid console IDs were found.");
+        }
+
+        return new GameSaveResponseDto(
+                errors.isEmpty() ?
+                        "All consoles were updated." :
+                        "The following IDs were invalid: " + errors.stream().map(String::valueOf)
+                                .collect(Collectors.joining(", ")),
+                new GameResponseDto(game)
+        );
+    }
+
+    @Transactional
     public void deleteGame(Long id) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
@@ -123,4 +189,6 @@ public class GameService {
 
         gameRepository.delete(game);
     }
+
+
 }
