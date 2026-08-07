@@ -1,4 +1,4 @@
-package maraisaferreira.com.github.RetroGamePlatform;
+package maraisaferreira.com.github.RetroGamePlatform.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
