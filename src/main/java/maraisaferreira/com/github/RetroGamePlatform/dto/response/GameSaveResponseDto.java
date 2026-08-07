@@ -1,10 +1,7 @@
 package maraisaferreira.com.github.RetroGamePlatform.dto.response;
 
-import java.util.List;
-
-public record MessageGameSavedResponseDto(
+public record GameSaveResponseDto(
         String message,
-        List<Long> errorsId,
         GameResponseDto game
 ) {
 }
