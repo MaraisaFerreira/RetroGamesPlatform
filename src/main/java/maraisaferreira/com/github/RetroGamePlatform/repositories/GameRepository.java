@@ -20,4 +20,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     List<Game> findByPartName(@Param("part") String part);
 
     List<Game> findByGameType(GameType gameType);
+
+    List<Game> findByConsolesId(Long id);
 }

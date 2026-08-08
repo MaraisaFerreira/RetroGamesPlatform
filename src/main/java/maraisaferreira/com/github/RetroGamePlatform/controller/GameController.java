@@ -30,7 +30,12 @@ public class GameController {
         return ResponseEntity.ok(gameService.findGameByPartName(part));
     }
 
-    @GetMapping("/by_type/{type}")
+    @GetMapping("/console/{id}")
+    public ResponseEntity<List<GameResponseDto>> findGameByConsole(@PathVariable Long id) {
+        return ResponseEntity.ok(gameService.findGameByConsole(id));
+    }
+
+    @GetMapping("/type/{type}")
     public ResponseEntity<List<GameResponseDto>> findGameByGameType(@PathVariable String type) {
         return ResponseEntity.ok(gameService.findGameByGameType(type));
     }

@@ -36,6 +36,11 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
+    public List<GameResponseDto> findGameByConsole(Long id) {
+        return gameRepository.findByConsolesId(id).stream().map(GameResponseDto::new).toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<GameResponseDto> findGameByGameType(String gameTypeStr) {
         try {
             GameType gameType = GameType.valueOf(gameTypeStr.toUpperCase());
