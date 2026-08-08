@@ -64,8 +64,8 @@ INSERT INTO game_console (game_id, console_id) VALUES
        (14, 6),
        (14, 8),
 
-       -- 15. Asterix (NES, Master System, Game Boy)
-       (15, 1),
+       -- 15. Asterix (SNES, Master System, Game Boy)
+       (15, 2),
        (15, 6),
        (15, 8),
 
