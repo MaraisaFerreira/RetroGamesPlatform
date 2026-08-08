@@ -16,7 +16,7 @@ public record GameRequestDto(
         String gameType,
 
         @NotNull(message = "This field cannot be null.")
-        @Size(min = 1, message = "The game must belong to at least one console.")
+        @Size(min = 1, message = "You must send at least one ID.")
         List<Long> consoleIds
 ) {
 }
