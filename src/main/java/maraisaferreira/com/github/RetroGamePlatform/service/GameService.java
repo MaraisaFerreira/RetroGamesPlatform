@@ -7,6 +7,9 @@ import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameSaveResponseDto;
+import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
+import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomNotFoundException;
+import maraisaferreira.com.github.RetroGamePlatform.helpers.Messages;
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
 import maraisaferreira.com.github.RetroGamePlatform.model.Game;
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.GameType;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class GameService {
     private final GameRepository gameRepository;
     private final ConsoleRepository consoleRepository;
+
 
     @Transactional(readOnly = true)
     public List<GameResponseDto> findAllGames() {
@@ -46,14 +50,14 @@ public class GameService {
             GameType gameType = GameType.valueOf(gameTypeStr.toUpperCase());
             return gameRepository.findByGameType(gameType).stream().map(GameResponseDto::new).toList();
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid Game Type. Values allowed: " + Arrays.toString(GameType.values()));
+            throw new CustomBadRequestException(Messages.invalidGameTypeMessage);
         }
     }
 
     @Transactional(readOnly = true)
     public GameResponseDto findGameById(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
+                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
 
         return new GameResponseDto(game);
     }
@@ -62,7 +66,7 @@ public class GameService {
     public GameSaveResponseDto saveGame(GameRequestDto requestDto) {
         gameRepository.findByName(requestDto.name())
                 .ifPresent(found -> {
-                    throw new RuntimeException("This name already exits on database. Name must be unique.");
+                    throw new CustomBadRequestException(Messages.getUniqueFieldMessage("name"));
                 });
 
         GameType gameType = GameType.UNKNOWN;
@@ -70,8 +74,7 @@ public class GameService {
             try {
                 gameType = GameType.valueOf(requestDto.gameType().toUpperCase());
             } catch (IllegalArgumentException ex) {
-                throw new RuntimeException("This value is not allowed. " +
-                        "Values allowed are " + Arrays.toString(GameType.values()));
+                throw new CustomBadRequestException(Messages.invalidGameTypeMessage);
             }
         }
 
@@ -83,7 +86,7 @@ public class GameService {
         }
 
         if (consoles.isEmpty()) {
-            throw new RuntimeException("Any console id was correctly informed. Try again.");
+            throw new CustomBadRequestException(Messages.anyCorrectId);
         }
 
         Game game = gameRepository.save(new Game(
@@ -106,14 +109,13 @@ public class GameService {
     @Transactional
     public GameResponseDto updateGame(Long id, GameUpdateRequestDto requestDto) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
+                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
 
         if (Strings.isNotBlank(requestDto.name())) {
             gameRepository.findByName(requestDto.name())
                     .filter(saved -> !saved.getId().equals(id))
                     .ifPresent(found -> {
-                        throw new RuntimeException("This name already exist with another id. " +
-                                "Name must be a unique field.");
+                        throw new CustomBadRequestException(Messages.getUniqueFieldMessage("name"));
                     });
 
             game.setName(requestDto.name());
@@ -124,8 +126,7 @@ public class GameService {
                 GameType gameType = GameType.valueOf(requestDto.gameType().toUpperCase());
                 game.setGameType(gameType);
             } catch (IllegalArgumentException e) {
-                throw new RuntimeException("This game type value isn't valid. Values allowed are "
-                        + Arrays.toString(GameType.values()));
+                throw new CustomBadRequestException(Messages.invalidGameTypeMessage);
             }
         }
 
@@ -141,7 +142,7 @@ public class GameService {
                                                @Valid GameConsolesUpdateRequestDto requestDto) {
 
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
+                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
 
         Set<Console> consoles = new HashSet<>();
         List<Long> errors = new ArrayList<>();
@@ -154,7 +155,7 @@ public class GameService {
         if (!consoles.isEmpty()) {
             game.getConsoles().addAll(consoles);
         } else {
-            throw new RuntimeException("No valid console IDs were found.");
+            throw new CustomBadRequestException(Messages.anyCorrectId);
         }
 
         return new GameSaveResponseDto(
@@ -171,7 +172,7 @@ public class GameService {
                                                   @Valid GameConsolesUpdateRequestDto requestDto) {
 
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
+                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
 
         Set<Console> consoles = new HashSet<>();
         List<Long> errors = new ArrayList<>();
@@ -186,7 +187,7 @@ public class GameService {
                 game.clearRelation(console);
             }
         } else {
-            throw new RuntimeException("No valid console IDs were found.");
+            throw new CustomBadRequestException(Messages.anyCorrectId);
         }
 
         return new GameSaveResponseDto(
@@ -201,7 +202,7 @@ public class GameService {
     @Transactional
     public void deleteGame(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
+                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
 
         for (Console console : new HashSet<>(game.getConsoles())) {
             game.clearRelation(console);
