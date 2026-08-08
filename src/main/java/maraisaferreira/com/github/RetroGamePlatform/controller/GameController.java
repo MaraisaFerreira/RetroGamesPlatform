@@ -2,8 +2,8 @@ package maraisaferreira.com.github.RetroGamePlatform.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameConsolesUpdateRequestDto;
+import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameSaveResponseDto;
@@ -23,6 +23,16 @@ public class GameController {
     @GetMapping
     public ResponseEntity<List<GameResponseDto>> findAllGames() {
         return ResponseEntity.ok(gameService.findAllGames());
+    }
+
+    @GetMapping("/part_name/{part}")
+    public ResponseEntity<List<GameResponseDto>> findGameByPartName(@PathVariable String part) {
+        return ResponseEntity.ok(gameService.findGameByPartName(part));
+    }
+
+    @GetMapping("/by_type/{type}")
+    public ResponseEntity<List<GameResponseDto>> findGameByGameType(@PathVariable String type) {
+        return ResponseEntity.ok(gameService.findGameByGameType(type));
     }
 
     @GetMapping("/{id}")
@@ -46,13 +56,13 @@ public class GameController {
 
     @PatchMapping("/{id}/add_consoles")
     public ResponseEntity<GameSaveResponseDto> addGameConsoles(@PathVariable Long id,
-                                                               @Valid @RequestBody GameConsolesUpdateRequestDto requestDto){
+                                                               @Valid @RequestBody GameConsolesUpdateRequestDto requestDto) {
         return ResponseEntity.ok(gameService.addGameConsoles(id, requestDto));
     }
 
     @PatchMapping("/{id}/remove_consoles")
     public ResponseEntity<GameSaveResponseDto> removeGameConsoles(@PathVariable Long id,
-                                                                  @Valid @RequestBody GameConsolesUpdateRequestDto requestDto){
+                                                                  @Valid @RequestBody GameConsolesUpdateRequestDto requestDto) {
         return ResponseEntity.ok(gameService.removeGameConsoles(id, requestDto));
     }
 

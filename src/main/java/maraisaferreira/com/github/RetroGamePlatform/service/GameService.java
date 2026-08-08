@@ -31,6 +31,21 @@ public class GameService {
     }
 
     @Transactional(readOnly = true)
+    public List<GameResponseDto> findGameByPartName(String part) {
+        return gameRepository.findByPartName(part).stream().map(GameResponseDto::new).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameResponseDto> findGameByGameType(String gameTypeStr) {
+        try {
+            GameType gameType = GameType.valueOf(gameTypeStr.toUpperCase());
+            return gameRepository.findByGameType(gameType).stream().map(GameResponseDto::new).toList();
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid Game Type. Values allowed: " + Arrays.toString(GameType.values()));
+        }
+    }
+
+    @Transactional(readOnly = true)
     public GameResponseDto findGameById(Long id) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Game not found. Is id correct?"));
