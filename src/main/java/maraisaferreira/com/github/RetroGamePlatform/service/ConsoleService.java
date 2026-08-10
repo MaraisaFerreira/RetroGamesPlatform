@@ -61,7 +61,7 @@ public class ConsoleService {
         Console console = consoleRepository.save(new Console(
                 null,
                 requestDto.name(),
-                Strings.isNotBlank(requestDto.acronym()) ? requestDto.acronym() : null,
+                requestDto.acronym(),
                 requestDto.origin()
         ));
 

@@ -24,7 +24,7 @@ public class Console {
     @Column(unique = true, length = 20)
     private String acronym;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String origin;
 
     @ManyToMany(mappedBy = "consoles")
