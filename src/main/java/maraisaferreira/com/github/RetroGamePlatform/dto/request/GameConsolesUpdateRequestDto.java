@@ -2,13 +2,13 @@ package maraisaferreira.com.github.RetroGamePlatform.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import maraisaferreira.com.github.RetroGamePlatform.helpers.Messages;
+import maraisaferreira.com.github.RetroGamePlatform.messages.MessagesCenter;
 
 import java.util.List;
 
 public record GameConsolesUpdateRequestDto(
-        @NotNull(message = Messages.atLestOneId)
-        @Size(min = 1, message = Messages.atLestOneId)
+        @NotNull(message = MessagesCenter.atLestOneId)
+        @Size(min = 1, message = MessagesCenter.atLestOneId)
         List<Long> consolesIDs
 ) {
 }

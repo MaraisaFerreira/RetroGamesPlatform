@@ -9,7 +9,7 @@ import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameSaveResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomNotFoundException;
-import maraisaferreira.com.github.RetroGamePlatform.helpers.Messages;
+import maraisaferreira.com.github.RetroGamePlatform.messages.MessagesCenter;
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
 import maraisaferreira.com.github.RetroGamePlatform.model.Game;
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.GameType;
@@ -50,14 +50,14 @@ public class GameService {
             GameType gameType = GameType.valueOf(gameTypeStr.toUpperCase());
             return gameRepository.findByGameType(gameType).stream().map(GameResponseDto::new).toList();
         } catch (IllegalArgumentException e) {
-            throw new CustomBadRequestException(Messages.invalidGameTypeMessage);
+            throw new CustomBadRequestException(MessagesCenter.invalidGameTypeMessage);
         }
     }
 
     @Transactional(readOnly = true)
     public GameResponseDto findGameById(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(MessagesCenter.notFound("Game")));
 
         return new GameResponseDto(game);
     }
@@ -66,7 +66,7 @@ public class GameService {
     public GameSaveResponseDto saveGame(GameRequestDto requestDto) {
         gameRepository.findByName(requestDto.name())
                 .ifPresent(found -> {
-                    throw new CustomBadRequestException(Messages.getUniqueFieldMessage("name"));
+                    throw new CustomBadRequestException(MessagesCenter.getUniqueFieldMessage("name"));
                 });
 
         GameType gameType = GameType.UNKNOWN;
@@ -74,7 +74,7 @@ public class GameService {
             try {
                 gameType = GameType.valueOf(requestDto.gameType().toUpperCase());
             } catch (IllegalArgumentException ex) {
-                throw new CustomBadRequestException(Messages.invalidGameTypeMessage);
+                throw new CustomBadRequestException(MessagesCenter.invalidGameTypeMessage);
             }
         }
 
@@ -86,7 +86,7 @@ public class GameService {
         }
 
         if (consoles.isEmpty()) {
-            throw new CustomBadRequestException(Messages.anyCorrectId);
+            throw new CustomBadRequestException(MessagesCenter.anyCorrectId);
         }
 
         Game game = gameRepository.save(new Game(
@@ -109,13 +109,13 @@ public class GameService {
     @Transactional
     public GameResponseDto updateGame(Long id, GameUpdateRequestDto requestDto) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(MessagesCenter.notFound("Game")));
 
         if (Strings.isNotBlank(requestDto.name())) {
             gameRepository.findByName(requestDto.name())
                     .filter(saved -> !saved.getId().equals(id))
                     .ifPresent(found -> {
-                        throw new CustomBadRequestException(Messages.getUniqueFieldMessage("name"));
+                        throw new CustomBadRequestException(MessagesCenter.getUniqueFieldMessage("name"));
                     });
 
             game.setName(requestDto.name());
@@ -126,7 +126,7 @@ public class GameService {
                 GameType gameType = GameType.valueOf(requestDto.gameType().toUpperCase());
                 game.setGameType(gameType);
             } catch (IllegalArgumentException e) {
-                throw new CustomBadRequestException(Messages.invalidGameTypeMessage);
+                throw new CustomBadRequestException(MessagesCenter.invalidGameTypeMessage);
             }
         }
 
@@ -142,7 +142,7 @@ public class GameService {
                                                @Valid GameConsolesUpdateRequestDto requestDto) {
 
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(MessagesCenter.notFound("Game")));
 
         Set<Console> consoles = new HashSet<>();
         List<Long> errors = new ArrayList<>();
@@ -155,7 +155,7 @@ public class GameService {
         if (!consoles.isEmpty()) {
             game.getConsoles().addAll(consoles);
         } else {
-            throw new CustomBadRequestException(Messages.anyCorrectId);
+            throw new CustomBadRequestException(MessagesCenter.anyCorrectId);
         }
 
         return new GameSaveResponseDto(
@@ -172,7 +172,7 @@ public class GameService {
                                                   @Valid GameConsolesUpdateRequestDto requestDto) {
 
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(MessagesCenter.notFound("Game")));
 
         Set<Console> consoles = new HashSet<>();
         List<Long> errors = new ArrayList<>();
@@ -187,7 +187,7 @@ public class GameService {
                 game.clearRelation(console);
             }
         } else {
-            throw new CustomBadRequestException(Messages.anyCorrectId);
+            throw new CustomBadRequestException(MessagesCenter.anyCorrectId);
         }
 
         return new GameSaveResponseDto(
@@ -202,7 +202,7 @@ public class GameService {
     @Transactional
     public void deleteGame(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(Messages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(MessagesCenter.notFound("Game")));
 
         for (Console console : new HashSet<>(game.getConsoles())) {
             game.clearRelation(console);

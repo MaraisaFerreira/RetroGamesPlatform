@@ -1,10 +1,10 @@
-package maraisaferreira.com.github.RetroGamePlatform.helpers;
+package maraisaferreira.com.github.RetroGamePlatform.messages;
 
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.GameType;
 
 import java.util.Arrays;
 
-public final class Messages {
+public final class MessagesCenter {
 
     public static final String invalidGameTypeMessage =
             "Invalid gameType. Values allowed: " + Arrays.toString(GameType.values());
@@ -28,6 +28,6 @@ public final class Messages {
         return String.format("This %s already exists in the database. The %s must be unique.", field, field);
     }
 
-    private Messages(){
+    private MessagesCenter(){
     }
 }
