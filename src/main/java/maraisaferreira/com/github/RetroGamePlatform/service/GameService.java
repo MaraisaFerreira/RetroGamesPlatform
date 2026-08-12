@@ -90,7 +90,6 @@ public class GameService {
         }
 
         Game game = gameRepository.save(new Game(
-                null,
                 requestDto.name(),
                 requestDto.releaseYear(),
                 gameType
@@ -200,6 +199,19 @@ public class GameService {
     }
 
     @Transactional
+    public GameResponseDto addCover(Long id, String coverUrl) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException(MessagesCenter.notFound("Game")));
+
+        if (Strings.isBlank(game.getCoverUrl()) ||
+                !Objects.equals(game.getCoverUrl(), coverUrl)) {
+            game.setCoverUrl(coverUrl);
+        }
+
+        return new GameResponseDto(game);
+    }
+
+    @Transactional
     public void deleteGame(Long id) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(MessagesCenter.notFound("Game")));
@@ -212,4 +224,11 @@ public class GameService {
     }
 
 
+    @Transactional
+    public String getGameCoverUrl(Long id) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException(MessagesCenter.notFound("Game")));
+
+        return game.getCoverUrl();
+    }
 }
