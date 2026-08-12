@@ -28,6 +28,17 @@ public class GlobalHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CustomInternalServerErrorException.class)
+    public ResponseEntity<ExceptionResponseDto> internalErrorExceptionHandler(CustomInternalServerErrorException ex, WebRequest request) {
+        return ResponseEntity.internalServerError().body(
+                new ExceptionResponseDto(
+                        Instant.now(),
+                        ex.getMessage(),
+                        request.getDescription(false).split("=")[1]
+                )
+        );
+    }
+
     @ExceptionHandler(CustomBadRequestException.class)
     public ResponseEntity<ExceptionResponseDto> customBadRequestHandler(CustomBadRequestException ex,
                                                                         WebRequest request) {
