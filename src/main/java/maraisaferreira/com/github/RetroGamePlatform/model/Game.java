@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id")
@@ -33,6 +32,8 @@ public class Game {
     @Column(nullable = false)
     private GameType gameType;
 
+    private String coverUrl;
+
     @ManyToMany
     @JoinTable(
             name = "game_console",
@@ -41,6 +42,11 @@ public class Game {
     )
     private final Set<Console> consoles = new HashSet<>();
 
+    public Game(String name, Integer releaseYear, GameType gameType) {
+        this.name = name;
+        this.releaseYear = releaseYear;
+        this.gameType = gameType;
+    }
 
     public void clearRelation(Console console) {
         this.consoles.remove(console);
