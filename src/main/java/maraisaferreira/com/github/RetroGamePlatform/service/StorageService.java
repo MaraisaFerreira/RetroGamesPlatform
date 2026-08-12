@@ -2,6 +2,7 @@ package maraisaferreira.com.github.RetroGamePlatform.service;
 
 import lombok.extern.slf4j.Slf4j;
 import maraisaferreira.com.github.RetroGamePlatform.config.StorageConfig;
+import maraisaferreira.com.github.RetroGamePlatform.constants.messages.StorageMessages;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomInternalServerErrorException;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class StorageService {
             Files.createDirectories(dirPath);
             log.info("Folder created.");
         } catch (Exception ex) {
-            throw new CustomInternalServerErrorException("Folder could not be created. " + ex.getMessage());
+            throw new CustomInternalServerErrorException(StorageMessages.folderNotCreated);
         }
     }
 
@@ -35,25 +36,25 @@ public class StorageService {
         try {
             Files.copy(file.getInputStream(), fileUrl, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
-            throw new CustomInternalServerErrorException("Ops, something gone wrong. Try again later.");
+            throw new CustomInternalServerErrorException(StorageMessages.somethingWrong);
         }
     }
 
     public Path getFileUrl(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new CustomBadRequestException("Image cannot be empty or null.");
+            throw new CustomBadRequestException(StorageMessages.notNullOrEmpty);
         }
 
         if (!Objects.equals(file.getContentType(), "image/jpeg")
                 && !Objects.equals(file.getContentType(), "image/png")) {
-            throw new CustomBadRequestException("Just are allowed jpeg or png images.");
+            throw new CustomBadRequestException(StorageMessages.imageTypes);
         }
 
         String fileName = file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank() ?
                 file.getOriginalFilename() : "file:" + Instant.now().toEpochMilli();
 
         if (fileName.contains("..")) {
-            throw new CustomBadRequestException("Image name cannot contain ..");
+            throw new CustomBadRequestException(StorageMessages.invalidName);
         }
 
         return dirPath.resolve(fileName).toAbsolutePath().normalize();
