@@ -6,18 +6,18 @@ import maraisaferreira.com.github.RetroGamePlatform.constants.messages.Validatio
 import java.util.List;
 
 public record GameRequestDto(
-        @NotBlank(message = ValidationMessages.notNullOrEmpty)
+        @NotBlank(message = ValidationMessages.NOT_NULL_OR_EMPTY)
         String name,
 
-        @NotNull(message = ValidationMessages.notNullOrEmpty)
-        @Min(value = 1970, message = ValidationMessages.minValue + "1970.")
-        @Max(value = 2010, message = ValidationMessages.maxValue + "2010.")
+        @NotNull(message = ValidationMessages.NOT_NULL_OR_EMPTY)
+        @Min(value = 1970, message = ValidationMessages.LOWER_VALUE_ALLOWED + "1970.")
+        @Max(value = 2010, message = ValidationMessages.MAX_VALUE_ALLOWED + "2010.")
         Integer releaseYear,
 
         String gameType,
 
-        @NotNull(message = ValidationMessages.notNullOrEmpty)
-        @Size(min = 1, message = ValidationMessages.atLestOneId)
+        @NotNull(message = ValidationMessages.NOT_NULL_OR_EMPTY)
+        @Size(min = 1, message = ValidationMessages.SEND_AT_LEAST_ONE_ID)
         List<Long> consoleIds
 ) {
 }

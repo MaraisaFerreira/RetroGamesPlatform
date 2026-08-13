@@ -50,7 +50,7 @@ public class GameService {
             GameType gameType = GameType.valueOf(gameTypeStr.toUpperCase());
             return gameRepository.findByGameType(gameType).stream().map(GameResponseDto::new).toList();
         } catch (IllegalArgumentException e) {
-            throw new CustomBadRequestException(ExceptionMessages.invalidGameTypeMessage);
+            throw new CustomBadRequestException(ExceptionMessages.INVALID_GAME_TYPE);
         }
     }
 
@@ -74,7 +74,7 @@ public class GameService {
             try {
                 gameType = GameType.valueOf(requestDto.gameType().toUpperCase());
             } catch (IllegalArgumentException ex) {
-                throw new CustomBadRequestException(ExceptionMessages.invalidGameTypeMessage);
+                throw new CustomBadRequestException(ExceptionMessages.INVALID_GAME_TYPE);
             }
         }
 
@@ -86,7 +86,7 @@ public class GameService {
         }
 
         if (consoles.isEmpty()) {
-            throw new CustomBadRequestException(ExceptionMessages.anyCorrectId);
+            throw new CustomBadRequestException(ExceptionMessages.ANY_CORRECT_ID);
         }
 
         Game game = gameRepository.save(new Game(
@@ -125,7 +125,7 @@ public class GameService {
                 GameType gameType = GameType.valueOf(requestDto.gameType().toUpperCase());
                 game.setGameType(gameType);
             } catch (IllegalArgumentException e) {
-                throw new CustomBadRequestException(ExceptionMessages.invalidGameTypeMessage);
+                throw new CustomBadRequestException(ExceptionMessages.INVALID_GAME_TYPE);
             }
         }
 
@@ -154,7 +154,7 @@ public class GameService {
         if (!consoles.isEmpty()) {
             game.getConsoles().addAll(consoles);
         } else {
-            throw new CustomBadRequestException(ExceptionMessages.anyCorrectId);
+            throw new CustomBadRequestException(ExceptionMessages.ANY_CORRECT_ID);
         }
 
         return new GameSaveResponseDto(
@@ -186,7 +186,7 @@ public class GameService {
                 game.clearRelation(console);
             }
         } else {
-            throw new CustomBadRequestException(ExceptionMessages.anyCorrectId);
+            throw new CustomBadRequestException(ExceptionMessages.ANY_CORRECT_ID);
         }
 
         return new GameSaveResponseDto(

@@ -7,8 +7,8 @@ import maraisaferreira.com.github.RetroGamePlatform.constants.messages.Validatio
 import java.util.List;
 
 public record GameConsolesUpdateRequestDto(
-        @NotNull(message = ValidationMessages.atLestOneId)
-        @Size(min = 1, message = ValidationMessages.atLestOneId)
+        @NotNull(message = ValidationMessages.SEND_AT_LEAST_ONE_ID)
+        @Size(min = 1, message = ValidationMessages.SEND_AT_LEAST_ONE_ID)
         List<Long> consolesIDs
 ) {
 }

@@ -8,13 +8,13 @@ import org.hibernate.validator.constraints.Length;
 public record ConsoleUpdateRequestDto(
         String name,
 
-        @Length(max = 20, message = ValidationMessages.maxLength + "20 characters.")
+        @Length(max = 20, message = ValidationMessages.MAX_LENGTH_ALLOWED + "20 characters.")
         String acronym,
 
-        @Length(max = 100, message = ValidationMessages.maxLength + "100 characters.")
+        @Length(max = 100, message = ValidationMessages.MAX_LENGTH_ALLOWED + "100 characters.")
         String origin
 ) {
-    @AssertTrue(message = ValidationMessages.atLeastOneField)
+    @AssertTrue(message = ValidationMessages.NO_DATA_TO_UPDATE)
     public boolean hasAnyData() {
         return Strings.isNotBlank(name)
                 || Strings.isNotBlank(acronym)

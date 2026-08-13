@@ -28,7 +28,7 @@ public class StorageService {
             Files.createDirectories(dirPath);
             log.info("Folder created.");
         } catch (IOException ex) {
-            throw new CustomInternalServerErrorException(StorageMessages.folderNotCreated);
+            throw new CustomInternalServerErrorException(StorageMessages.FOLDER_NOT_CREATED);
         }
     }
 
@@ -38,7 +38,7 @@ public class StorageService {
         try {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
-            throw new CustomInternalServerErrorException(StorageMessages.somethingWrong);
+            throw new CustomInternalServerErrorException(StorageMessages.SOMETHING_WRONG);
         }
     }
 
@@ -55,18 +55,18 @@ public class StorageService {
 
     public String getValidImgName(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new CustomBadRequestException(StorageMessages.notNullOrEmpty);
+            throw new CustomBadRequestException(StorageMessages.NOT_NULL_OR_EMPTY);
         }
 
         if (file.getContentType() == null || !IMAGE_TYPES.contains(file.getContentType())) {
-            throw new CustomBadRequestException(StorageMessages.imageTypes);
+            throw new CustomBadRequestException(StorageMessages.IMAGE_TYPES);
         }
 
         String fileName = Strings.isNotBlank(file.getOriginalFilename()) ?
                 file.getOriginalFilename() : "file:" + Instant.now().toEpochMilli();
 
         if (fileName.contains("..")) {
-            throw new CustomBadRequestException(StorageMessages.invalidName);
+            throw new CustomBadRequestException(StorageMessages.INVALID_NAME);
         }
 
         return fileName;
