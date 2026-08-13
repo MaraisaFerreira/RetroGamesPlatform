@@ -32,7 +32,8 @@ public class Game {
     @Column(nullable = false)
     private GameType gameType;
 
-    private String coverUrl;
+    @Column(unique = true)
+    private String cover;
 
     @ManyToMany
     @JoinTable(
