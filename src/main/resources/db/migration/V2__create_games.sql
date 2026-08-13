@@ -12,7 +12,7 @@ CREATE TABLE games (
         'RACE',
         'SHOOTER'
     ),
-    cover_url VARCHAR(2018),
+    cover VARCHAR(500) UNIQUE,
 
     CONSTRAINT ch_release_year_retro
        CHECK (release_year BETWEEN 1970 AND 2010)

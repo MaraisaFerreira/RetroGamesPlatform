@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
     Optional<Game> findByName(String name);
+    Optional<Game> findByCover(String cover);
 
     @Query("""
         SELECT g

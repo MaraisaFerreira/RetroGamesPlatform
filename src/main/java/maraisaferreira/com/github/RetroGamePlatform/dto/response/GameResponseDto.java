@@ -10,7 +10,7 @@ public record GameResponseDto(
         String name,
         Integer releaseYear,
         GameType gameType,
-        String coverUrl,
+        String cover,
         List<ConsoleResponseDto> consoles
 ) {
     public GameResponseDto(Game game) {
@@ -19,7 +19,7 @@ public record GameResponseDto(
                 game.getName(),
                 game.getReleaseYear(),
                 game.getGameType(),
-                game.getCoverUrl(),
+                game.getCover(),
                 game.getConsoles().stream().map(ConsoleResponseDto::new).toList()
         );
     }
