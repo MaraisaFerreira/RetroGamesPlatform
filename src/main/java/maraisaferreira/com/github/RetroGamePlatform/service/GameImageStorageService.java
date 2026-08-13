@@ -5,6 +5,7 @@ import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Path;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -15,13 +16,13 @@ public class GameImageStorageService {
 
 
     public GameResponseDto saveGameCover(Long id, MultipartFile file) {
-        String prevCoverUrl = gameService.getGameCoverUrl(id);
-        String newCoverUrl = storageService.getFileUrl(file).toString();
+        String gameCover = gameService.getGameCover(id);
+        String newGameCover = storageService.getValidImgName(file);
 
-        if (!Objects.equals(prevCoverUrl, newCoverUrl)){
-            storageService.uploadFile(file);
-            GameResponseDto gameDto = gameService.addCover(id, newCoverUrl);
-            storageService.deleteOldCover(prevCoverUrl);
+        if (!Objects.equals(gameCover, newGameCover)) {
+            storageService.uploadFile(newGameCover, file);
+            GameResponseDto gameDto = gameService.addCover(id, newGameCover);
+            storageService.deleteOldCover(gameCover);
 
             return gameDto;
         }

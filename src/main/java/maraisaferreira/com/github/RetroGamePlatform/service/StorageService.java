@@ -5,6 +5,7 @@ import maraisaferreira.com.github.RetroGamePlatform.config.StorageConfig;
 import maraisaferreira.com.github.RetroGamePlatform.constants.messages.StorageMessages;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomInternalServerErrorException;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,58 +14,62 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Instant;
-import java.util.Objects;
+import java.util.List;
 
 @Slf4j
 @Service
 public class StorageService {
     private final Path dirPath;
+    private static final List<String> IMAGE_TYPES = List.of("image/jpeg", "image/png");
 
     public StorageService(StorageConfig config) {
         dirPath = Path.of(config.getDir()).toAbsolutePath().normalize();
         try {
             Files.createDirectories(dirPath);
             log.info("Folder created.");
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             throw new CustomInternalServerErrorException(StorageMessages.folderNotCreated);
         }
     }
 
-    public void uploadFile(MultipartFile file) {
-        Path fileUrl = getFileUrl(file);
+    public void uploadFile(String fileName, MultipartFile file) {
+        Path filePath = dirPath.resolve(fileName).toAbsolutePath().normalize();
 
         try {
-            Files.copy(file.getInputStream(), fileUrl, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
             throw new CustomInternalServerErrorException(StorageMessages.somethingWrong);
         }
     }
 
-    public Path getFileUrl(MultipartFile file) {
+    public void deleteOldCover(String fileName) {
+        if (Strings.isNotBlank(fileName)) {
+            Path filePath = dirPath.resolve(fileName).toAbsolutePath().normalize();
+            try {
+                Files.deleteIfExists(filePath);
+            } catch (IOException ex) {
+                log.warn("The cover {} wasn't deleted.", fileName);
+            }
+        }
+    }
+
+    public String getValidImgName(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new CustomBadRequestException(StorageMessages.notNullOrEmpty);
         }
 
-        if (!Objects.equals(file.getContentType(), "image/jpeg")
-                && !Objects.equals(file.getContentType(), "image/png")) {
+        if (file.getContentType() == null || !IMAGE_TYPES.contains(file.getContentType())) {
             throw new CustomBadRequestException(StorageMessages.imageTypes);
         }
 
-        String fileName = file.getOriginalFilename() != null && !file.getOriginalFilename().isBlank() ?
+        String fileName = Strings.isNotBlank(file.getOriginalFilename()) ?
                 file.getOriginalFilename() : "file:" + Instant.now().toEpochMilli();
 
         if (fileName.contains("..")) {
             throw new CustomBadRequestException(StorageMessages.invalidName);
         }
 
-        return dirPath.resolve(fileName).toAbsolutePath().normalize();
+        return fileName;
     }
 
-    public void deleteOldCover(String prevCoverUrl) {
-        try {
-            Files.deleteIfExists(Path.of(prevCoverUrl));
-        } catch (Exception ex) {
-            log.warn("The cover {} wasn't deleted.", prevCoverUrl);
-        }
-    }
 }

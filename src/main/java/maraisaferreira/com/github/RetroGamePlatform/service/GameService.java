@@ -199,13 +199,19 @@ public class GameService {
     }
 
     @Transactional
-    public GameResponseDto addCover(Long id, String coverUrl) {
+    public GameResponseDto addCover(Long id, String cover) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
 
-        if (Strings.isBlank(game.getCoverUrl()) ||
-                !Objects.equals(game.getCoverUrl(), coverUrl)) {
-            game.setCoverUrl(coverUrl);
+        gameRepository.findByCover(cover)
+                .filter(saved -> !saved.getId().equals(game.getId()))
+                .ifPresent(present -> {
+                    throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("Image"));
+                });
+
+        if (Strings.isBlank(game.getCover()) ||
+                !Objects.equals(game.getCover(), cover)) {
+            game.setCover(cover);
         }
 
         return new GameResponseDto(game);
@@ -225,10 +231,10 @@ public class GameService {
 
 
     @Transactional
-    public String getGameCoverUrl(Long id) {
+    public String getGameCover(Long id) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
 
-        return game.getCoverUrl();
+        return game.getCover();
     }
 }
