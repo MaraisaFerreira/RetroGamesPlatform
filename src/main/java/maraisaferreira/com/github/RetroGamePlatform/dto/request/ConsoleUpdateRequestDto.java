@@ -1,7 +1,7 @@
 package maraisaferreira.com.github.RetroGamePlatform.dto.request;
 
 import jakarta.validation.constraints.AssertTrue;
-import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ValidationMessages;
+import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ValidationMessages;
 import org.apache.logging.log4j.util.Strings;
 import org.hibernate.validator.constraints.Length;
 

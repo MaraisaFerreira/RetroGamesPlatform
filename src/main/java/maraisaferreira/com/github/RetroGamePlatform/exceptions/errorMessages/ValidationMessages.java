@@ -1,4 +1,4 @@
-package maraisaferreira.com.github.RetroGamePlatform.constants.messages;
+package maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages;
 
 public final class ValidationMessages {
 

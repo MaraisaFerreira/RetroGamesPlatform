@@ -2,7 +2,7 @@ package maraisaferreira.com.github.RetroGamePlatform.service;
 
 import lombok.extern.slf4j.Slf4j;
 import maraisaferreira.com.github.RetroGamePlatform.config.StorageConfig;
-import maraisaferreira.com.github.RetroGamePlatform.constants.messages.StorageMessages;
+import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.StorageMessages;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomInternalServerErrorException;
 import org.apache.logging.log4j.util.Strings;
