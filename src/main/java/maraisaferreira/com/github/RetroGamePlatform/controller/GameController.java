@@ -2,17 +2,20 @@ package maraisaferreira.com.github.RetroGamePlatform.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameConsolesUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameSaveResponseDto;
+import maraisaferreira.com.github.RetroGamePlatform.dto.response.PageResponse;
 import maraisaferreira.com.github.RetroGamePlatform.service.GameService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,23 +24,33 @@ public class GameController {
     private final GameService gameService;
 
     @GetMapping
-    public ResponseEntity<List<GameResponseDto>> findAllGames() {
-        return ResponseEntity.ok(gameService.findAllGames());
+    public ResponseEntity<PageResponse<GameResponseDto>> findAllGames(
+            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+        return ResponseEntity.ok(gameService.findAllGames(pageable));
     }
 
     @GetMapping("/part_name/{part}")
-    public ResponseEntity<List<GameResponseDto>> findGameByPartName(@PathVariable String part) {
-        return ResponseEntity.ok(gameService.findGameByPartName(part));
+    public ResponseEntity<PageResponse<GameResponseDto>> findGameByPartName(
+            @PathVariable String part,
+            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+
+        return ResponseEntity.ok(gameService.findGameByPartName(part, pageable));
     }
 
     @GetMapping("/console/{id}")
-    public ResponseEntity<List<GameResponseDto>> findGameByConsole(@PathVariable Long id) {
-        return ResponseEntity.ok(gameService.findGameByConsole(id));
+    public ResponseEntity<PageResponse<GameResponseDto>> findGameByConsole(
+            @PathVariable Long id,
+            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+
+        return ResponseEntity.ok(gameService.findGameByConsole(id, pageable));
     }
 
     @GetMapping("/type/{type}")
-    public ResponseEntity<List<GameResponseDto>> findGameByGameType(@PathVariable String type) {
-        return ResponseEntity.ok(gameService.findGameByGameType(type));
+    public ResponseEntity<PageResponse<GameResponseDto>> findGameByGameType(
+            @PathVariable String type,
+            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+
+        return ResponseEntity.ok(gameService.findGameByGameType(type, pageable));
     }
 
     @GetMapping("/{id}")

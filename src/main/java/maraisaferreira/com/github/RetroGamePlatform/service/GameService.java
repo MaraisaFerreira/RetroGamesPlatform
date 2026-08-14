@@ -2,20 +2,22 @@ package maraisaferreira.com.github.RetroGamePlatform.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameConsolesUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameSaveResponseDto;
+import maraisaferreira.com.github.RetroGamePlatform.dto.response.PageResponse;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomNotFoundException;
+import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
 import maraisaferreira.com.github.RetroGamePlatform.model.Game;
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.GameType;
 import maraisaferreira.com.github.RetroGamePlatform.repositories.ConsoleRepository;
 import maraisaferreira.com.github.RetroGamePlatform.repositories.GameRepository;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,25 +32,25 @@ public class GameService {
 
 
     @Transactional(readOnly = true)
-    public List<GameResponseDto> findAllGames() {
-        return gameRepository.findAll().stream().map(GameResponseDto::new).toList();
+    public PageResponse<GameResponseDto> findAllGames(Pageable pageable) {
+        return PageResponse.from(gameRepository.findAll(pageable), GameResponseDto::new);
     }
 
     @Transactional(readOnly = true)
-    public List<GameResponseDto> findGameByPartName(String part) {
-        return gameRepository.findByPartName(part).stream().map(GameResponseDto::new).toList();
+    public PageResponse<GameResponseDto> findGameByPartName(String part, Pageable pageable) {
+        return PageResponse.from(gameRepository.findByPartName(part, pageable), GameResponseDto::new);
     }
 
     @Transactional(readOnly = true)
-    public List<GameResponseDto> findGameByConsole(Long id) {
-        return gameRepository.findByConsolesId(id).stream().map(GameResponseDto::new).toList();
+    public PageResponse<GameResponseDto> findGameByConsole(Long id, Pageable pageable) {
+        return PageResponse.from(gameRepository.findByConsolesId(id, pageable), GameResponseDto::new);
     }
 
     @Transactional(readOnly = true)
-    public List<GameResponseDto> findGameByGameType(String gameTypeStr) {
+    public PageResponse<GameResponseDto> findGameByGameType(String gameTypeStr, Pageable pageable) {
         try {
             GameType gameType = GameType.valueOf(gameTypeStr.toUpperCase());
-            return gameRepository.findByGameType(gameType).stream().map(GameResponseDto::new).toList();
+            return PageResponse.from(gameRepository.findByGameType(gameType, pageable), GameResponseDto::new);
         } catch (IllegalArgumentException e) {
             throw new CustomBadRequestException(ExceptionMessages.INVALID_GAME_TYPE);
         }

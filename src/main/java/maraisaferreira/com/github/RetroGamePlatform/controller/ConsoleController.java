@@ -2,15 +2,18 @@ package maraisaferreira.com.github.RetroGamePlatform.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.ConsoleResponseDto;
+import maraisaferreira.com.github.RetroGamePlatform.dto.response.PageResponse;
 import maraisaferreira.com.github.RetroGamePlatform.service.ConsoleService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,13 +22,16 @@ public class ConsoleController {
     private final ConsoleService consoleService;
 
     @GetMapping
-    public ResponseEntity<List<ConsoleResponseDto>> findAllConsoles() {
-        return ResponseEntity.ok(consoleService.findAllConsoles());
+    public ResponseEntity<PageResponse<ConsoleResponseDto>> findAllConsoles(
+            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+        return ResponseEntity.ok(consoleService.findAllConsoles(pageable));
     }
 
     @GetMapping("/part_name/{part}")
-    public ResponseEntity<List<ConsoleResponseDto>> findConsoleByPartName(@PathVariable String part) {
-        return ResponseEntity.ok(consoleService.findConsolesByPartName(part));
+    public ResponseEntity<PageResponse<ConsoleResponseDto>> findConsoleByPartName(
+            @PathVariable String part,
+            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+        return ResponseEntity.ok(consoleService.findConsolesByPartName(part, pageable));
     }
 
     @GetMapping("/{id}")

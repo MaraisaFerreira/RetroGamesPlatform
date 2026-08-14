@@ -1,21 +1,22 @@
 package maraisaferreira.com.github.RetroGamePlatform.service;
 
 import lombok.RequiredArgsConstructor;
-import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.ConsoleResponseDto;
+import maraisaferreira.com.github.RetroGamePlatform.dto.response.PageResponse;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomNotFoundException;
+import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
 import maraisaferreira.com.github.RetroGamePlatform.model.Game;
 import maraisaferreira.com.github.RetroGamePlatform.repositories.ConsoleRepository;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -23,14 +24,14 @@ public class ConsoleService {
     private final ConsoleRepository consoleRepository;
 
     @Transactional(readOnly = true)
-    public List<ConsoleResponseDto> findAllConsoles() {
-        return consoleRepository.findAll().stream().map(ConsoleResponseDto::new).toList();
+    public PageResponse<ConsoleResponseDto> findAllConsoles(Pageable pageable) {
+        return PageResponse.from(consoleRepository.findAll(pageable), ConsoleResponseDto::new);
     }
 
     @Transactional(readOnly = true)
-    public List<ConsoleResponseDto> findConsolesByPartName(String part) {
-        return consoleRepository.findByPartName(part)
-                .stream().map(ConsoleResponseDto::new).toList();
+    public PageResponse<ConsoleResponseDto> findConsolesByPartName(String part, Pageable pageable) {
+        return PageResponse.from(consoleRepository.findByPartName(part, pageable), ConsoleResponseDto::new);
+
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,8 @@
 package maraisaferreira.com.github.RetroGamePlatform.repositories;
 
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,5 +19,5 @@ public interface ConsoleRepository extends JpaRepository<Console, Long> {
         FROM Console c
         WHERE LOWER(c.name) LIKE CONCAT('%', LOWER(:part), '%')
     """)
-    List<Console> findByPartName(@Param("part") String part);
+    Page<Console> findByPartName(@Param("part") String part, Pageable pageable);
 }
