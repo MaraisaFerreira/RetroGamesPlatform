@@ -1,5 +1,7 @@
 package maraisaferreira.com.github.RetroGamePlatform.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
@@ -10,80 +12,141 @@ import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameSaveResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.PageResponse;
 import maraisaferreira.com.github.RetroGamePlatform.service.GameService;
-import org.springframework.data.domain.Page;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Games")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/games")
 public class GameController {
     private final GameService gameService;
 
-    @GetMapping
+    @Operation(
+            summary = "Get all the games available in the database"
+    )
+    @GetMapping(
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<PageResponse<GameResponseDto>> findAllGames(
-            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+            @ParameterObject @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
         return ResponseEntity.ok(gameService.findAllGames(pageable));
     }
 
-    @GetMapping("/part_name/{part}")
+    @Operation(
+            summary = "Get all games that match the specified name."
+    )
+    @GetMapping(
+            value = "/part_name/{part}",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<PageResponse<GameResponseDto>> findGameByPartName(
             @PathVariable String part,
-            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+            @ParameterObject @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
 
         return ResponseEntity.ok(gameService.findGameByPartName(part, pageable));
     }
 
-    @GetMapping("/console/{id}")
+    @Operation(
+            summary = "Get all the games for the specified console."
+    )
+    @GetMapping(
+            value = "/console/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<PageResponse<GameResponseDto>> findGameByConsole(
             @PathVariable Long id,
-            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+            @ParameterObject @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
 
         return ResponseEntity.ok(gameService.findGameByConsole(id, pageable));
     }
 
-    @GetMapping("/type/{type}")
+    @Operation(
+            summary = "Get all the games for the specified type."
+    )
+    @GetMapping(
+            value = "/type/{type}",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<PageResponse<GameResponseDto>> findGameByGameType(
             @PathVariable String type,
-            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+            @ParameterObject @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
 
         return ResponseEntity.ok(gameService.findGameByGameType(type, pageable));
     }
 
-    @GetMapping("/{id}")
+    @Operation(
+            summary = "Get a specific game by its ID."
+    )
+    @GetMapping(
+            value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<GameResponseDto> findGameById(@PathVariable Long id) {
         return ResponseEntity.ok(gameService.findGameById(id));
     }
 
-    @PostMapping
+    @Operation(
+            summary = "Save a new game to the database."
+    )
+    @PostMapping(
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<GameSaveResponseDto> saveGame(@Valid @RequestBody GameRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 gameService.saveGame(requestDto)
         );
     }
 
-    @PatchMapping("/{id}")
+    @Operation(
+            summary = "Updates one or more fields in the game specified by its ID."
+    )
+    @PatchMapping(
+            value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<GameResponseDto> updateGame(@PathVariable Long id,
                                                       @Valid @RequestBody GameUpdateRequestDto requestDto) {
         return ResponseEntity.ok(gameService.updateGame(id, requestDto));
     }
 
 
-    @PatchMapping("/{id}/add_consoles")
+    @Operation(
+            summary = "Add one or more consoles for which the game is available."
+    )
+    @PatchMapping(
+            value = "/{id}/add_consoles",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<GameSaveResponseDto> addGameConsoles(@PathVariable Long id,
                                                                @Valid @RequestBody GameConsolesUpdateRequestDto requestDto) {
         return ResponseEntity.ok(gameService.addGameConsoles(id, requestDto));
     }
 
-    @PatchMapping("/{id}/remove_consoles")
+    @Operation(
+            summary = "Remove one or more the consoles for which the game is no more available."
+    )
+    @PatchMapping(
+            value = "/{id}/remove_consoles",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<GameSaveResponseDto> removeGameConsoles(@PathVariable Long id,
                                                                   @Valid @RequestBody GameConsolesUpdateRequestDto requestDto) {
         return ResponseEntity.ok(gameService.removeGameConsoles(id, requestDto));
     }
 
+    @Operation(
+            summary = "Removes the entire specified game."
+    )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGame(@PathVariable Long id) {
         gameService.deleteGame(id);
