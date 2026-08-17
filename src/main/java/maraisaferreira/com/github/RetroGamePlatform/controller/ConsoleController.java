@@ -1,5 +1,6 @@
 package maraisaferreira.com.github.RetroGamePlatform.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
@@ -8,53 +9,74 @@ import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleUpdateReq
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.ConsoleResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.PageResponse;
 import maraisaferreira.com.github.RetroGamePlatform.service.ConsoleService;
-import org.springframework.data.domain.Page;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "Consoles")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/consoles")
 public class ConsoleController {
     private final ConsoleService consoleService;
 
-    @GetMapping
+    @GetMapping(
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<PageResponse<ConsoleResponseDto>> findAllConsoles(
-            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+            @ParameterObject @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
         return ResponseEntity.ok(consoleService.findAllConsoles(pageable));
     }
 
-    @GetMapping("/part_name/{part}")
+    @GetMapping(
+            value = "/part_name/{part}",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<PageResponse<ConsoleResponseDto>> findConsoleByPartName(
             @PathVariable String part,
-            @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
+            @ParameterObject @PageableDefault(size = AppConstants.PAGE_SIZE, sort = {"name"}) Pageable pageable) {
         return ResponseEntity.ok(consoleService.findConsolesByPartName(part, pageable));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(
+            value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<ConsoleResponseDto> findConsoleById(@PathVariable Long id) {
         return ResponseEntity.ok(consoleService.findConsoleById(id));
     }
 
-    @PostMapping
+    @PostMapping(
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<ConsoleResponseDto> saveConsole(@Valid @RequestBody ConsoleRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 consoleService.saveConsole(requestDto)
         );
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping(
+            value = "/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE}
+    )
     public ResponseEntity<ConsoleResponseDto> updateConsole(@PathVariable Long id,
                                                             @Valid @RequestBody ConsoleUpdateRequestDto requestDto) {
         return ResponseEntity.ok(consoleService.updateConsole(id, requestDto));
     }
 
-    @PatchMapping("/remove_acronym/{id}")
-    public ResponseEntity<ConsoleResponseDto> setConsoleAcronymAsNull(@PathVariable Long id) {
-        return ResponseEntity.ok(consoleService.setConsoleAcronymAsNull(id));
+    @PatchMapping(
+            value = "/remove_acronym/{id}",
+            produces = {MediaType.APPLICATION_JSON_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public ResponseEntity<ConsoleResponseDto> removeAcronym(@PathVariable Long id) {
+        return ResponseEntity.ok(consoleService.removeAcronym(id));
     }
 
     @DeleteMapping("/{id}")

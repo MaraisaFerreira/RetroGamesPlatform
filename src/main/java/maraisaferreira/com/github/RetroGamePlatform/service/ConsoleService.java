@@ -101,7 +101,7 @@ public class ConsoleService {
     }
 
     @Transactional
-    public ConsoleResponseDto setConsoleAcronymAsNull(Long id) {
+    public ConsoleResponseDto removeAcronym(Long id) {
         Console console = consoleRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Console")));
 
