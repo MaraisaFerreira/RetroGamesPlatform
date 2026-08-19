@@ -2,18 +2,20 @@ package maraisaferreira.com.github.RetroGamePlatform.dto.response;
 
 import maraisaferreira.com.github.RetroGamePlatform.model.Player;
 
+import java.time.LocalDate;
+
 public record PlayerResponseDto(
-        String id,
         String name,
-        String email,
-        Integer age
+        LocalDate birthDate,
+        Integer age,
+        String email
 ) {
     public PlayerResponseDto(Player player) {
         this(
-                player.getId().toString(),
                 player.getName(),
-                player.getEmail(),
-                player.getAge()
+                player.getBirthDate(),
+                player.getAge(),
+                player.getEmail()
         );
     }
 }
