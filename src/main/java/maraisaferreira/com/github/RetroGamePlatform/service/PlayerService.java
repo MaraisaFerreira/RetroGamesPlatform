@@ -8,6 +8,7 @@ import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomNotFoundExc
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.model.Player;
 import maraisaferreira.com.github.RetroGamePlatform.repositories.PlayerRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PlayerService {
     private final PlayerRepository playerRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public PlayerResponseDto findPlayerByEmail(String email) {
@@ -35,7 +37,7 @@ public class PlayerService {
                 requestDto.name(),
                 requestDto.birthDate(),
                 requestDto.email(),
-                requestDto.password()
+                passwordEncoder.encode(requestDto.password())
         ));
 
         return new PlayerResponseDto(player);
