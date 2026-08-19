@@ -9,6 +9,7 @@ public final class ExceptionMessages {
             "Invalid gameType. Values allowed: " + Arrays.toString(GameType.values());
 
     public static final String ANY_CORRECT_ID = "Any ID was correctly sent. Try again.";
+    public static final String UNDER_AGE = "Sorry, you have to be at least 10 years old.";
 
     public static String notFound(String register) {
         return String.format("%s not found. Is ID correct?", register);
