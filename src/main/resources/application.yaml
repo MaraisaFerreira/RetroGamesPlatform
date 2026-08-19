@@ -1,3 +1,7 @@
+api:
+  token:
+    secret: "${SECRET:file:./jwt_key.secret}"
+
 spring:
   application:
     name: RetroGamePlatform

@@ -1,6 +1,7 @@
 draft.txt
 db_credentials.yaml
 temp
+jwt_key.secret
 
 HELP.md
 target/
