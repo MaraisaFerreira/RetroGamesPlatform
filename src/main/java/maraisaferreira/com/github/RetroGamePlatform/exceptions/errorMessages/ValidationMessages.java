@@ -10,8 +10,8 @@ public final class ValidationMessages {
     public static final String MIN_LENGTH_ALLOWED = "The lower length allowed: ";
     public static final String NO_DATA_TO_UPDATE = "No data to update. At least one field must be filled.";
     public static final String NOT_A_VALID_EMAIL = "This is not a valid email";
-
-
+    public static final String MUST_BE_PAST_DATE = "Birth date obviously must be in the past.";
+    public static final String INVALID_DATE = "You have to be at least 10 years old to register.";
 
 
     private ValidationMessages() {
