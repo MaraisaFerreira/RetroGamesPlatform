@@ -4,5 +4,10 @@ CREATE TABLE players
     name       VARCHAR(250) NOT NULL,
     email      VARCHAR(250) NOT NULL UNIQUE,
     birth_date DATE         NOT NULL,
-    password   VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    sys_role    ENUM(
+                'BASIC',
+                'ADMIN',
+                'OWNER'
+            ) NOT NULL DEFAULT 'BASIC'
 );

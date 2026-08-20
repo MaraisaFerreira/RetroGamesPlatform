@@ -4,6 +4,7 @@ import lombok.Getter;
 import maraisaferreira.com.github.RetroGamePlatform.model.Player;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -19,7 +20,20 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return switch (player.getSysRole()) {
+            case OWNER -> List.of(
+                    new SimpleGrantedAuthority("ROLE_OWNER"),
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_BASIC")
+            );
+            case ADMIN -> List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_BASIC")
+            );
+            case BASIC -> List.of(
+                    new SimpleGrantedAuthority("ROLE_BASIC")
+            );
+        };
     }
 
     @Override

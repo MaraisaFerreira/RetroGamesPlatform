@@ -11,6 +11,7 @@ import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ValidationMessages;
+import maraisaferreira.com.github.RetroGamePlatform.model.enums.Roles;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -42,11 +43,16 @@ public class Player {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Roles sysRole;
+
     public Player(String name, LocalDate birthDate, String email, String password) {
         this.name = name;
         this.setBirthDate(birthDate);
         this.email = email;
         this.password = password;
+        this.sysRole = Roles.BASIC;
     }
 
     public void setBirthDate(LocalDate birthDate) {
