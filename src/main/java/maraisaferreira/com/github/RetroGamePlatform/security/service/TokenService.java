@@ -2,7 +2,9 @@ package maraisaferreira.com.github.RetroGamePlatform.security.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import maraisaferreira.com.github.RetroGamePlatform.model.Player;
+import maraisaferreira.com.github.RetroGamePlatform.model.enums.Roles;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +21,21 @@ public class TokenService {
         return JWT.create()
                 .withIssuer(issuer)
                 .withSubject(player.getEmail())
+                .withClaim("role", player.getSysRole().toString())
                 .withIssuedAt(Instant.now())
-                .withExpiresAt(Instant.now().plusMillis(1800000))
+                .withExpiresAt(Instant.now().plusMillis(900000))
                 .sign(Algorithm.HMAC256(secret));
     }
 
-    public String validateToken(String token) {
-        return JWT.require(Algorithm.HMAC256(secret))
+    public TokenDataDto validateToken(String token) {
+        DecodedJWT decoded = JWT.require(Algorithm.HMAC256(secret))
                 .withIssuer(issuer)
                 .build()
-                .verify(token)
-                .getSubject();
+                .verify(token);
+
+        return new TokenDataDto(
+                decoded.getSubject(),
+                Roles.valueOf(decoded.getClaim("role").asString())
+        );
     }
 }
