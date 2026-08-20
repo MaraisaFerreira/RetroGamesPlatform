@@ -4,6 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.PlayerRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.PlayerResponseDto;
+import maraisaferreira.com.github.RetroGamePlatform.security.dto.request.LoginRequestDto;
+import maraisaferreira.com.github.RetroGamePlatform.security.dto.response.LoginResponseDto;
+import maraisaferreira.com.github.RetroGamePlatform.security.service.AuthService;
 import maraisaferreira.com.github.RetroGamePlatform.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     private final PlayerService playerService;
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<PlayerResponseDto> registerUser(@Valid @RequestBody PlayerRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 playerService.savePlayer(requestDto)
         );
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto requestDto){
+        return ResponseEntity.ok(authService.login(requestDto));
     }
 }
