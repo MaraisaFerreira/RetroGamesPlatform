@@ -18,6 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Games")
@@ -27,9 +28,11 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
     private final GameService gameService;
 
+
     @Operation(
             summary = "Get all the games available in the database"
     )
+    @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
@@ -38,9 +41,11 @@ public class GameController {
         return ResponseEntity.ok(gameService.findAllGames(pageable));
     }
 
+
     @Operation(
             summary = "Get all games that match the specified name."
     )
+    @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             value = "/part_name/{part}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
@@ -55,6 +60,7 @@ public class GameController {
     @Operation(
             summary = "Get all the games for the specified console."
     )
+    @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             value = "/console/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
@@ -69,6 +75,7 @@ public class GameController {
     @Operation(
             summary = "Get all the games for the specified type."
     )
+    @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             value = "/type/{type}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
@@ -83,6 +90,7 @@ public class GameController {
     @Operation(
             summary = "Get a specific game by its ID."
     )
+    @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
@@ -94,6 +102,7 @@ public class GameController {
     @Operation(
             summary = "Save a new game to the database."
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE}
@@ -107,6 +116,7 @@ public class GameController {
     @Operation(
             summary = "Updates one or more fields in the game specified by its ID."
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/{id}",
             produces = {MediaType.APPLICATION_JSON_VALUE},
@@ -121,6 +131,7 @@ public class GameController {
     @Operation(
             summary = "Add one or more consoles for which the game is available."
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/{id}/add_consoles",
             produces = {MediaType.APPLICATION_JSON_VALUE},
@@ -134,6 +145,7 @@ public class GameController {
     @Operation(
             summary = "Remove one or more the consoles for which the game is no more available."
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/{id}/remove_consoles",
             produces = {MediaType.APPLICATION_JSON_VALUE},
@@ -147,6 +159,7 @@ public class GameController {
     @Operation(
             summary = "Removes the entire specified game."
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGame(@PathVariable Long id) {
         gameService.deleteGame(id);
