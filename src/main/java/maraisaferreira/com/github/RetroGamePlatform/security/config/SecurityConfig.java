@@ -1,6 +1,8 @@
 package maraisaferreira.com.github.RetroGamePlatform.security.config;
 
 import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
+import maraisaferreira.com.github.RetroGamePlatform.security.component.SecurityFilterComponent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,10 +16,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final SecurityFilterComponent securityFilterComponent;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity security) {
@@ -30,7 +35,9 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                                 .anyRequest().authenticated()
 
-                ).build();
+                )
+                .addFilterBefore(securityFilterComponent, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean

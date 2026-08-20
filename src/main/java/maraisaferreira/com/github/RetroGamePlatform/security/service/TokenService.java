@@ -3,10 +3,7 @@ package maraisaferreira.com.github.RetroGamePlatform.security.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import maraisaferreira.com.github.RetroGamePlatform.model.Player;
-import maraisaferreira.com.github.RetroGamePlatform.security.details.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -16,13 +13,22 @@ public class TokenService {
 
     @Value("${api.token.secret}")
     private String secret;
+    private static final String issuer = "Retro Game Platform";
 
     public String generateToken(Player player) {
         return JWT.create()
-                .withIssuer("Retro Game Platform")
+                .withIssuer(issuer)
                 .withSubject(player.getEmail())
                 .withIssuedAt(Instant.now())
                 .withExpiresAt(Instant.now().plusMillis(1800000))
                 .sign(Algorithm.HMAC256(secret));
+    }
+
+    public String validateToken(String token) {
+        return JWT.require(Algorithm.HMAC256(secret))
+                .withIssuer(issuer)
+                .build()
+                .verify(token)
+                .getSubject();
     }
 }
