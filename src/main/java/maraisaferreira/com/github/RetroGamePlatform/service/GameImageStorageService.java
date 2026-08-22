@@ -2,10 +2,10 @@ package maraisaferreira.com.github.RetroGamePlatform.service;
 
 import lombok.RequiredArgsConstructor;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameResponseDto;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -27,5 +27,13 @@ public class GameImageStorageService {
             return gameDto;
         }
         return null;
+    }
+
+    public void removeGameCover(Long id) {
+        String cover = gameService.removeCover(id);
+
+        if (Strings.isNotBlank(cover)) {
+            storageService.deleteOldCover(cover);
+        }
     }
 }

@@ -220,6 +220,19 @@ public class GameService {
     }
 
     @Transactional
+    public String removeCover(Long id) {
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+        String cover = null;
+        if (game.getCover() != null) {
+            cover = game.getCover();
+            game.setCover(null);
+        }
+
+        return cover;
+    }
+
+    @Transactional
     public void deleteGame(Long id) {
         Game game = gameRepository.findById(id)
                 .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));

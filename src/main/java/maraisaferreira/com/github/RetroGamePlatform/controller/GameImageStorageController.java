@@ -30,4 +30,11 @@ public class GameImageStorageController {
                 imageStorageService.saveGameCover(id, file)
         );
     }
+
+    @PreAuthorize("hasRole('OWNER')")
+    @DeleteMapping("/game/{id}")
+    public ResponseEntity<Void> removeGameCover(@PathVariable Long id){
+        imageStorageService.removeGameCover(id);
+        return ResponseEntity.noContent().build();
+    }
 }
