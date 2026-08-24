@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import maraisaferreira.com.github.RetroGamePlatform.constants.AppConstants;
+import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ValidationMessages;
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.GameType;
 
 import java.util.HashSet;
@@ -24,8 +26,8 @@ public class Game {
     private String name;
 
     @Column(nullable = false)
-    @Min(value = 1970, message = "The lower value allowed is 1970.")
-    @Max(value = 2010, message = "The maximum value allowed is 2010.")
+    @Min(value = AppConstants.LOWEST_GAME_YEAR, message = ValidationMessages.GAME_YEAR)
+    @Max(value = AppConstants.HIGHEST_GAME_YEAR, message = ValidationMessages.GAME_YEAR)
     private Integer releaseYear;
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +37,7 @@ public class Game {
     @Column(unique = true)
     private String cover;
 
+    @Getter(AccessLevel.NONE)
     @ManyToMany
     @JoinTable(
             name = "game_console",
@@ -49,9 +52,20 @@ public class Game {
         this.gameType = gameType;
     }
 
+    public Set<Console> getConsoles(){
+        return Set.copyOf(consoles);
+    }
+
+    public void addConsole(Console console) {
+        if (console != null) consoles.add(console);
+    }
+
+    public void removeConsole(Console console) {
+        if (console != null) consoles.remove(console);
+    }
+
     public void clearRelation(Console console) {
         this.consoles.remove(console);
-        console.getGames().remove(this);
-
+        console.removeGame(this);
     }
 }

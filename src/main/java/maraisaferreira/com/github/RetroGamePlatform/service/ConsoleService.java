@@ -7,7 +7,7 @@ import maraisaferreira.com.github.RetroGamePlatform.dto.response.ConsoleResponse
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.PageResponse;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomNotFoundException;
-import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ExceptionMessages;
+import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
 import maraisaferreira.com.github.RetroGamePlatform.model.Game;
 import maraisaferreira.com.github.RetroGamePlatform.repositories.ConsoleRepository;
@@ -37,7 +37,7 @@ public class ConsoleService {
     @Transactional(readOnly = true)
     public ConsoleResponseDto findConsoleById(Long id) {
         Console console = consoleRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Console"))
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.CONSOLE_NOT_FOUND)
                 );
 
         return new ConsoleResponseDto(console);
@@ -47,13 +47,13 @@ public class ConsoleService {
     public ConsoleResponseDto saveConsole(ConsoleRequestDto requestDto) {
         consoleRepository.findByName(requestDto.name())
                 .ifPresent(found -> {
-                    throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("name"));
+                    throw new CustomBadRequestException(ExceptionMessages.UNIQUE_NAME);
                 });
 
         if (Strings.isNotBlank(requestDto.acronym())) {
             consoleRepository.findByAcronym(requestDto.acronym())
                     .ifPresent(found -> {
-                        throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("acronym"));
+                        throw new CustomBadRequestException(ExceptionMessages.UNIQUE_ACRONYM);
                     });
         }
 
@@ -70,13 +70,13 @@ public class ConsoleService {
     @Transactional
     public ConsoleResponseDto updateConsole(Long id, ConsoleUpdateRequestDto requestDto) {
         Console console = consoleRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Console")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.CONSOLE_NOT_FOUND));
 
         if (Strings.isNotBlank(requestDto.name())) {
             consoleRepository.findByName(requestDto.name())
                     .filter(saved -> !saved.getId().equals(id))
                     .ifPresent(found -> {
-                        throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("name"));
+                        throw new CustomBadRequestException(ExceptionMessages.UNIQUE_NAME);
                     });
 
             console.setName(requestDto.name());
@@ -86,7 +86,7 @@ public class ConsoleService {
             consoleRepository.findByAcronym(requestDto.acronym())
                     .filter(saved -> !saved.getId().equals(id))
                     .ifPresent(found -> {
-                        throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("acronym"));
+                        throw new CustomBadRequestException(ExceptionMessages.UNIQUE_ACRONYM);
                     });
 
             console.setAcronym(requestDto.acronym());
@@ -103,7 +103,7 @@ public class ConsoleService {
     @Transactional
     public ConsoleResponseDto removeAcronym(Long id) {
         Console console = consoleRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Console")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.CONSOLE_NOT_FOUND));
 
         console.setAcronym(null);
 
@@ -113,7 +113,7 @@ public class ConsoleService {
     @Transactional
     public void deleteConsole(Long id) {
         Console console = consoleRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Console")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.CONSOLE_NOT_FOUND));
 
         for (Game game : new HashSet<>(console.getGames())) {
             game.clearRelation(console);

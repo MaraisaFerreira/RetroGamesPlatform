@@ -27,6 +27,19 @@ public class Console {
     @Column(length = 100)
     private String origin;
 
+    @Getter(AccessLevel.NONE)
     @ManyToMany(mappedBy = "consoles")
     private final Set<Game> games = new HashSet<>();
+
+    public Set<Game> getGames() {
+        return Set.copyOf(games);
+    }
+
+    public void addGame(Game game) {
+        if (game != null) games.add(game);
+    }
+
+    public void removeGame(Game game) {
+        if (game != null) games.remove(game);
+    }
 }

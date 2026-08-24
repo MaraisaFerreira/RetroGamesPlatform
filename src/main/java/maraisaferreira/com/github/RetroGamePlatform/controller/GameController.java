@@ -3,7 +3,7 @@ package maraisaferreira.com.github.RetroGamePlatform.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
+import maraisaferreira.com.github.RetroGamePlatform.constants.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameConsolesUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameUpdateRequestDto;
@@ -40,7 +40,7 @@ public class GameController {
 
     @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
-            value = "/part_name/{part}",
+            value = "/name_contains/{part}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<PageResponse<GameResponseDto>> findGameByPartName(

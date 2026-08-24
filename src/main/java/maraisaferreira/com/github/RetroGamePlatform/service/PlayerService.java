@@ -6,7 +6,7 @@ import maraisaferreira.com.github.RetroGamePlatform.dto.request.PlayerRequestDto
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.PlayerResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomNotFoundException;
-import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ExceptionMessages;
+import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.model.Player;
 import maraisaferreira.com.github.RetroGamePlatform.repositories.PlayerRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +22,7 @@ public class PlayerService {
     @Transactional(readOnly = true)
     public PlayerResponseDto findPlayerByEmail(PlayerEmailRequestDto requestDto) {
         Player player = playerRepository.findByEmail(requestDto.email())
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Email")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.UNIQUE_EMAIL));
 
         return new PlayerResponseDto(player);
     }
@@ -31,7 +31,7 @@ public class PlayerService {
     public PlayerResponseDto savePlayer(PlayerRequestDto requestDto) {
         playerRepository.findByEmail(requestDto.email())
                 .ifPresent(present -> {
-                    throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("email"));
+                    throw new CustomBadRequestException(ExceptionMessages.UNIQUE_EMAIL);
                 });
 
         Player player = playerRepository.save(new Player(
@@ -47,7 +47,7 @@ public class PlayerService {
     @Transactional
     public void removePlayer(PlayerEmailRequestDto requestDto) {
         Player player = playerRepository.findByEmail(requestDto.email())
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Email")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.EMAIL_NOT_FOUND));
 
         playerRepository.delete(player);
     }

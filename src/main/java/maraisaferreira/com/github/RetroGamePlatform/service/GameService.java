@@ -2,6 +2,7 @@ package maraisaferreira.com.github.RetroGamePlatform.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameConsolesUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.GameUpdateRequestDto;
@@ -10,7 +11,6 @@ import maraisaferreira.com.github.RetroGamePlatform.dto.response.GameSaveRespons
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.PageResponse;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomNotFoundException;
-import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ExceptionMessages;
 import maraisaferreira.com.github.RetroGamePlatform.model.Console;
 import maraisaferreira.com.github.RetroGamePlatform.model.Game;
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.GameType;
@@ -59,7 +59,7 @@ public class GameService {
     @Transactional(readOnly = true)
     public GameResponseDto findGameById(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.GAME_NOT_FOUND));
 
         return new GameResponseDto(game);
     }
@@ -68,7 +68,7 @@ public class GameService {
     public GameSaveResponseDto saveGame(GameRequestDto requestDto) {
         gameRepository.findByName(requestDto.name())
                 .ifPresent(found -> {
-                    throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("name"));
+                    throw new CustomBadRequestException(ExceptionMessages.UNIQUE_NAME);
                 });
 
         GameType gameType = GameType.UNKNOWN;
@@ -97,7 +97,9 @@ public class GameService {
                 gameType
         ));
 
-        game.getConsoles().addAll(consoles);
+        for (Console console : consoles) {
+            game.addConsole(console);
+        }
 
         return new GameSaveResponseDto(
                 idErrors.isEmpty() ?
@@ -110,13 +112,13 @@ public class GameService {
     @Transactional
     public GameResponseDto updateGame(Long id, GameUpdateRequestDto requestDto) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.GAME_NOT_FOUND));
 
         if (Strings.isNotBlank(requestDto.name())) {
             gameRepository.findByName(requestDto.name())
                     .filter(saved -> !saved.getId().equals(id))
                     .ifPresent(found -> {
-                        throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("name"));
+                        throw new CustomBadRequestException(ExceptionMessages.UNIQUE_NAME);
                     });
 
             game.setName(requestDto.name());
@@ -143,7 +145,7 @@ public class GameService {
                                                @Valid GameConsolesUpdateRequestDto requestDto) {
 
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.GAME_NOT_FOUND));
 
         Set<Console> consoles = new HashSet<>();
         List<Long> errors = new ArrayList<>();
@@ -154,7 +156,9 @@ public class GameService {
         }
 
         if (!consoles.isEmpty()) {
-            game.getConsoles().addAll(consoles);
+            for (Console console : consoles) {
+                game.addConsole(console);
+            }
         } else {
             throw new CustomBadRequestException(ExceptionMessages.ANY_CORRECT_ID);
         }
@@ -173,7 +177,7 @@ public class GameService {
                                                   @Valid GameConsolesUpdateRequestDto requestDto) {
 
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.GAME_NOT_FOUND));
 
         Set<Console> consoles = new HashSet<>();
         List<Long> errors = new ArrayList<>();
@@ -203,12 +207,12 @@ public class GameService {
     @Transactional
     public GameResponseDto addCover(Long id, String cover) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.GAME_NOT_FOUND));
 
         gameRepository.findByCover(cover)
                 .filter(saved -> !saved.getId().equals(game.getId()))
                 .ifPresent(present -> {
-                    throw new CustomBadRequestException(ExceptionMessages.getUniqueFieldMessage("Image"));
+                    throw new CustomBadRequestException(ExceptionMessages.UNIQUE_COVER);
                 });
 
         if (Strings.isBlank(game.getCover()) ||
@@ -222,7 +226,7 @@ public class GameService {
     @Transactional
     public String removeCover(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.GAME_NOT_FOUND));
         String cover = null;
         if (game.getCover() != null) {
             cover = game.getCover();
@@ -235,7 +239,7 @@ public class GameService {
     @Transactional
     public void deleteGame(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.GAME_NOT_FOUND));
 
         for (Console console : new HashSet<>(game.getConsoles())) {
             game.clearRelation(console);
@@ -248,7 +252,7 @@ public class GameService {
     @Transactional
     public String getGameCover(Long id) {
         Game game = gameRepository.findById(id)
-                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Game")));
+                .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.GAME_NOT_FOUND));
 
         return game.getCover();
     }

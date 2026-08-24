@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class DevDatabaseConfig {
 
-    @Bean
-    FlywayMigrationStrategy cleanDatabase() {
-        return flyway -> {
-            flyway.clean();
-
-            flyway.migrate();
-        };
-    }
+//    @Bean
+//    FlywayMigrationStrategy cleanDatabase() {
+//        return flyway -> {
+//            flyway.clean();
+//
+//            flyway.migrate();
+//        };
+//    }
 }

@@ -1,7 +1,8 @@
 package maraisaferreira.com.github.RetroGamePlatform.dto.request;
 
 import jakarta.validation.constraints.*;
-import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ValidationMessages;
+import maraisaferreira.com.github.RetroGamePlatform.constants.AppConstants;
+import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ValidationMessages;
 
 import java.util.List;
 
@@ -10,8 +11,8 @@ public record GameRequestDto(
         String name,
 
         @NotNull(message = ValidationMessages.NOT_NULL_OR_EMPTY)
-        @Min(value = 1970, message = ValidationMessages.LOWER_VALUE_ALLOWED + "1970.")
-        @Max(value = 2010, message = ValidationMessages.MAX_VALUE_ALLOWED + "2010.")
+        @Min(value = AppConstants.LOWEST_GAME_YEAR, message = ValidationMessages.GAME_YEAR)
+        @Max(value = AppConstants.HIGHEST_GAME_YEAR, message = ValidationMessages.GAME_YEAR)
         Integer releaseYear,
 
         String gameType,
