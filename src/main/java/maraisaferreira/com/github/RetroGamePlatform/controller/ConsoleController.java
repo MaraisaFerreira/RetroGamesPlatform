@@ -68,6 +68,7 @@ public class ConsoleController {
         );
     }
 
+
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/{id}",
@@ -79,6 +80,7 @@ public class ConsoleController {
         return ResponseEntity.ok(consoleService.updateConsole(id, requestDto));
     }
 
+
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/remove_acronym/{id}",
@@ -88,6 +90,7 @@ public class ConsoleController {
     public ResponseEntity<ConsoleResponseDto> removeAcronym(@PathVariable Long id) {
         return ResponseEntity.ok(consoleService.removeAcronym(id));
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
