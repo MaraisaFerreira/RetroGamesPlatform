@@ -1,6 +1,5 @@
 package maraisaferreira.com.github.RetroGamePlatform.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +28,6 @@ public class GameController {
     private final GameService gameService;
 
 
-    @Operation(
-            summary = "Get all the games available in the database"
-    )
     @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE}
@@ -42,9 +38,6 @@ public class GameController {
     }
 
 
-    @Operation(
-            summary = "Get all games that match the specified name."
-    )
     @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             value = "/part_name/{part}",
@@ -57,9 +50,6 @@ public class GameController {
         return ResponseEntity.ok(gameService.findGameByPartName(part, pageable));
     }
 
-    @Operation(
-            summary = "Get all the games for the specified console."
-    )
     @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             value = "/console/{id}",
@@ -72,9 +62,6 @@ public class GameController {
         return ResponseEntity.ok(gameService.findGameByConsole(id, pageable));
     }
 
-    @Operation(
-            summary = "Get all the games for the specified type."
-    )
     @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             value = "/type/{type}",
@@ -87,9 +74,6 @@ public class GameController {
         return ResponseEntity.ok(gameService.findGameByGameType(type, pageable));
     }
 
-    @Operation(
-            summary = "Get a specific game by its ID."
-    )
     @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
             value = "/{id}",
@@ -99,9 +83,6 @@ public class GameController {
         return ResponseEntity.ok(gameService.findGameById(id));
     }
 
-    @Operation(
-            summary = "Save a new game to the database."
-    )
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(
             produces = {MediaType.APPLICATION_JSON_VALUE},
@@ -113,9 +94,6 @@ public class GameController {
         );
     }
 
-    @Operation(
-            summary = "Updates one or more fields in the game specified by its ID."
-    )
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/{id}",
@@ -128,9 +106,6 @@ public class GameController {
     }
 
 
-    @Operation(
-            summary = "Add one or more consoles for which the game is available."
-    )
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/{id}/add_consoles",
@@ -142,9 +117,6 @@ public class GameController {
         return ResponseEntity.ok(gameService.addGameConsoles(id, requestDto));
     }
 
-    @Operation(
-            summary = "Remove one or more the consoles for which the game is no more available."
-    )
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/{id}/remove_consoles",
@@ -156,9 +128,6 @@ public class GameController {
         return ResponseEntity.ok(gameService.removeGameConsoles(id, requestDto));
     }
 
-    @Operation(
-            summary = "Removes the entire specified game."
-    )
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGame(@PathVariable Long id) {
