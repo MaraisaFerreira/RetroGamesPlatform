@@ -7,10 +7,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
+import maraisaferreira.com.github.RetroGamePlatform.constants.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
-import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ExceptionMessages;
-import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ValidationMessages;
+import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ExceptionMessages;
+import maraisaferreira.com.github.RetroGamePlatform.constants.messages.ValidationMessages;
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.Roles;
 
 import java.time.LocalDate;
@@ -32,10 +32,10 @@ public class Player {
 
     @Setter(AccessLevel.NONE)
     @Column(nullable = false)
-    @Past(message = ValidationMessages.MUST_BE_PAST_DATE)
+    @Past(message = ValidationMessages.INVALID_DATE)
     private LocalDate birthDate;
 
-    @Pattern(regexp = AppConstants.EMAIL_PATTERN,
+    @Pattern(regexp = AppConstants.EMAIL_REGEX,
             message = ValidationMessages.NOT_A_VALID_EMAIL)
     @Column(nullable = false, unique = true)
     private String email;

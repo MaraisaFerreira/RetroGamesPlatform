@@ -15,5 +15,5 @@ CREATE TABLE games (
     cover VARCHAR(500) UNIQUE,
 
     CONSTRAINT ch_release_year_retro
-       CHECK (release_year BETWEEN 1970 AND 2010)
+       CHECK (release_year BETWEEN 1972 AND 2010)
 );
