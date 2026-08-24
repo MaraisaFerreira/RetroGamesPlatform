@@ -15,12 +15,12 @@ public class GameImageStorageService {
     private final GameService gameService;
 
 
-    public GameResponseDto saveGameCover(Long id, MultipartFile file) {
+    public GameResponseDto saveGameCover(Long id, MultipartFile imageFile) {
         String gameCover = gameService.getGameCover(id);
-        String newGameCover = storageService.getValidImgName(file);
+        String newGameCover = storageService.getValidImgName(imageFile);
 
         if (!Objects.equals(gameCover, newGameCover)) {
-            storageService.uploadFile(newGameCover, file);
+            storageService.uploadFile(newGameCover, imageFile);
             GameResponseDto gameDto = gameService.addCover(id, newGameCover);
             storageService.deleteOldCover(gameCover);
 

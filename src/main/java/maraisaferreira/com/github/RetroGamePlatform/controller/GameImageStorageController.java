@@ -25,9 +25,9 @@ public class GameImageStorageController {
             consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
     )
     public ResponseEntity<GameResponseDto> saveGameCover(@PathVariable Long id,
-                                                         @RequestParam(name = "file") MultipartFile file) {
+                                                         @RequestParam(name = "image") MultipartFile imageFile) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                imageStorageService.saveGameCover(id, file)
+                imageStorageService.saveGameCover(id, imageFile)
         );
     }
 
