@@ -20,7 +20,7 @@ public class AuthService {
 
         var auth = authenticationManager.authenticate(userAndPassword);
 
-        Player player = ((User) auth.getPrincipal()).getPlayer();
+        Player player = ((User) auth.getPrincipal()).player();
         String token = tokenService.generateToken(player);
 
         return new LoginResponseDto("Success", token);

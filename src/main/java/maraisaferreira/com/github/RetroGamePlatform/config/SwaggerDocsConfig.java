@@ -10,6 +10,7 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
+import maraisaferreira.com.github.RetroGamePlatform.constants.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.ExceptionResponseDto;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -26,8 +27,9 @@ public class SwaggerDocsConfig {
                 .license(new License()
                         .name("Apache 2.0")
                         .url("https://www.apache.org/licenses/LICENSE-2.0"))
-                .description("A platform for preserving and revisiting the best classic games. <br>" +
-                        "Only games released between 1970 and 2010 on the best video game consoles available at the time.")
+                .description(String.format("A platform for preserving and revisiting the best classic games. <br>" +
+                        "Only games released between %s and %s on the best video game consoles available at the " +
+                        "time.", AppConstants.LOWEST_GAME_YEAR, AppConstants.HIGHEST_GAME_YEAR))
                 .contact(new Contact()
                         .name("Maraísa Ferreira")
                         .url("https://github.com/MaraisaFerreira/RetroGamesPlatform"))
@@ -47,13 +49,12 @@ public class SwaggerDocsConfig {
                             ApiResponses responses = operation.getResponses();
 
                             responses.addApiResponse("400", new ApiResponse()
-                                    .description("Bad Request")
+                                    .description("Bad Request: Invalid request data.")
                                     .content(content)
-
                             );
 
                             responses.addApiResponse("500", new ApiResponse()
-                                    .description("Internal Server Error.")
+                                    .description("Internal Server Error: Something went wrong.")
                                     .content(content)
                             );
 

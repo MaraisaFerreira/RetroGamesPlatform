@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import maraisaferreira.com.github.RetroGamePlatform.model.Player;
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.Roles;
+import maraisaferreira.com.github.RetroGamePlatform.security.dto.response.TokenDataDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
