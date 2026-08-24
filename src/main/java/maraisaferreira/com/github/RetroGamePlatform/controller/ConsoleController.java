@@ -3,7 +3,7 @@ package maraisaferreira.com.github.RetroGamePlatform.controller;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
+import maraisaferreira.com.github.RetroGamePlatform.constants.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.ConsoleUpdateRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.ConsoleResponseDto;
@@ -37,7 +37,7 @@ public class ConsoleController {
 
     @PreAuthorize("hasRole('BASIC')")
     @GetMapping(
-            value = "/part_name/{part}",
+            value = "/name_contains/{part}",
             produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<PageResponse<ConsoleResponseDto>> findConsoleByPartName(
@@ -84,8 +84,7 @@ public class ConsoleController {
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(
             value = "/remove_acronym/{id}",
-            produces = {MediaType.APPLICATION_JSON_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE}
+            produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<ConsoleResponseDto> removeAcronym(@PathVariable Long id) {
         return ResponseEntity.ok(consoleService.removeAcronym(id));
