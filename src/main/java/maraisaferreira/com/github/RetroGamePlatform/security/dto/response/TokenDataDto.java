@@ -1,4 +1,4 @@
-package maraisaferreira.com.github.RetroGamePlatform.security.service;
+package maraisaferreira.com.github.RetroGamePlatform.security.dto.response;
 
 import maraisaferreira.com.github.RetroGamePlatform.model.enums.Roles;
 
