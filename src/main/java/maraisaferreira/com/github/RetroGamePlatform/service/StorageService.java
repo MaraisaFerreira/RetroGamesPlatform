@@ -48,7 +48,7 @@ public class StorageService {
             try {
                 Files.deleteIfExists(filePath);
             } catch (IOException ex) {
-                log.warn("The cover {} wasn't deleted.", fileName);
+                log.warn("The cover {} wasn't deleted. \n {}", fileName, ex.getMessage());
             }
         }
     }
