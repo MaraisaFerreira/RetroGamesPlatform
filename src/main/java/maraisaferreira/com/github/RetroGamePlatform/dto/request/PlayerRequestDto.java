@@ -1,9 +1,6 @@
 package maraisaferreira.com.github.RetroGamePlatform.dto.request;
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import maraisaferreira.com.github.RetroGamePlatform.config.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.errorMessages.ValidationMessages;
 import org.hibernate.validator.constraints.Length;
@@ -18,7 +15,7 @@ public record PlayerRequestDto(
         @NotNull(message = ValidationMessages.NOT_NULL_OR_EMPTY)
         LocalDate birthDate,
 
-        @Pattern(regexp = AppConstants.EMAIL_PATTERN, message = ValidationMessages.NOT_A_VALID_EMAIL)
+        @Email(regexp = AppConstants.EMAIL_PATTERN, message = ValidationMessages.NOT_A_VALID_EMAIL)
         @NotBlank(message = ValidationMessages.NOT_NULL_OR_EMPTY)
         String email,
 

@@ -1,6 +1,7 @@
 package maraisaferreira.com.github.RetroGamePlatform.service;
 
 import lombok.RequiredArgsConstructor;
+import maraisaferreira.com.github.RetroGamePlatform.dto.request.PlayerEmailRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.request.PlayerRequestDto;
 import maraisaferreira.com.github.RetroGamePlatform.dto.response.PlayerResponseDto;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.CustomBadRequestException;
@@ -19,8 +20,8 @@ public class PlayerService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public PlayerResponseDto findPlayerByEmail(String email) {
-        Player player = playerRepository.findByEmail(email)
+    public PlayerResponseDto findPlayerByEmail(PlayerEmailRequestDto requestDto) {
+        Player player = playerRepository.findByEmail(requestDto.email())
                 .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Email")));
 
         return new PlayerResponseDto(player);
@@ -44,8 +45,8 @@ public class PlayerService {
     }
 
     @Transactional
-    public void removePlayer(String email) {
-        Player player = playerRepository.findByEmail(email)
+    public void removePlayer(PlayerEmailRequestDto requestDto) {
+        Player player = playerRepository.findByEmail(requestDto.email())
                 .orElseThrow(() -> new CustomNotFoundException(ExceptionMessages.notFound("Email")));
 
         playerRepository.delete(player);
