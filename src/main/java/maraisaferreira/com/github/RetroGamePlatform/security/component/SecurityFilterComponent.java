@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import maraisaferreira.com.github.RetroGamePlatform.security.service.TokenDataDto;
+import maraisaferreira.com.github.RetroGamePlatform.security.dto.response.TokenDataDto;
 import maraisaferreira.com.github.RetroGamePlatform.security.service.TokenService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
