@@ -1,6 +1,7 @@
 package maraisaferreira.com.github.RetroGamePlatform.config;
 
 import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import maraisaferreira.com.github.RetroGamePlatform.constants.AppConstants;
 import maraisaferreira.com.github.RetroGamePlatform.exceptions.ExceptionResponseDto;
 import org.springdoc.core.customizers.OpenApiCustomizer;
@@ -21,6 +24,8 @@ public class SwaggerDocsConfig {
 
     @Bean
     OpenAPI mainDocsConfig() {
+        final String securitySchemeName = "bearerAuth";
+
         return new OpenAPI().info(new Info()
                 .title("Retro Games Platform \uD83C\uDFAE")
                 .version("v1")
@@ -32,8 +37,19 @@ public class SwaggerDocsConfig {
                         "time.", AppConstants.LOWEST_GAME_YEAR, AppConstants.HIGHEST_GAME_YEAR))
                 .contact(new Contact()
                         .name("Maraísa Ferreira")
-                        .url("https://github.com/MaraisaFerreira/RetroGamesPlatform"))
-        );
+                        .url("https://github.com/MaraisaFerreira/RetroGamesPlatform")
+                )
+
+
+                ).addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .components(new Components()
+                        .addSecuritySchemes(securitySchemeName, new SecurityScheme()
+                                .name(securitySchemeName)
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                        )
+                );
     }
 
     @Bean
