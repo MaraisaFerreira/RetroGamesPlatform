@@ -5,6 +5,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -55,6 +57,30 @@ public class GlobalHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponseDto> customNotFoundHandler(CustomNotFoundException ex,
                                                                       WebRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new ExceptionResponseDto(
+                        Instant.now(),
+                        ex.getMessage(),
+                        request.getDescription(false).split("=")[1]
+                )
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponseDto> customAcessesDeniedHandler(AccessDeniedException ex,
+                                                                           WebRequest request) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                new ExceptionResponseDto(
+                        Instant.now(),
+                        ex.getMessage(),
+                        request.getDescription(false).split("=")[1]
+                )
+        );
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponseDto> customAuthenticationHandler(AuthenticationException ex,
+                                                                            WebRequest request) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
                 new ExceptionResponseDto(
                         Instant.now(),
                         ex.getMessage(),
