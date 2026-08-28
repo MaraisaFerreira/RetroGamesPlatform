@@ -7,9 +7,11 @@
 ---
 <div align="center">
     <img src="screenshots/Screenshot_01.png"  alt="Search all consoles">
+<br><br>
     <img src="screenshots/Screenshot_02.png"  alt="Search consoles by its ID">
 <br><br>
     <img src="screenshots/Screenshot_03.png"  alt="Search game its ID">
+<br><br>
     <img src="screenshots/Screenshot_04.png"  alt="Access denied">
 </div>
 
