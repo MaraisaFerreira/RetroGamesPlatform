@@ -6,11 +6,11 @@
 
 ---
 <div align="center">
-    <img src="screenshots/Screenshot_01.png" width="40%" alt="Search all consoles">
-    <img src="screenshots/Screenshot_02.png" width="40%" alt="Search consoles by its ID">
+    <img src="screenshots/Screenshot_01.png"  alt="Search all consoles">
+    <img src="screenshots/Screenshot_02.png"  alt="Search consoles by its ID">
 <br><br>
-    <img src="screenshots/Screenshot_03.png" width="40%" alt="Search game its ID">
-    <img src="screenshots/Screenshot_04.png" width="40%" alt="Access denied">
+    <img src="screenshots/Screenshot_03.png"  alt="Search game its ID">
+    <img src="screenshots/Screenshot_04.png"  alt="Access denied">
 </div>
 
 ## 💡 About the Project
